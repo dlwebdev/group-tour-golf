@@ -24,6 +24,12 @@ export class AuthService {
                     .catch(this.handleError);
   }  
 
+  getUserAuthStatus(): Observable<Object[]> {
+    return this.http.get('/api/user/authenticated')
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  }
+
   getUserPolls(): Observable<string[]> {
     return this.http.get('/api/user/polls')
                     .map((res: Response) => res.json())

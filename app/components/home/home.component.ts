@@ -31,18 +31,17 @@ export class HomeComponent implements OnInit {
     * Get the names OnInit
     */
     ngOnInit() {
-        let user = Cookie.get('user');
-        console.log("user: ", user);
+        let userCookie = Cookie.get('user');
+        console.log("user: ", userCookie);
         
-        if(user) {
-            console.log("User is logged in.");
-        } else {
-            this.authService.getCurrentUser()
-              .subscribe(
-                this.user = data;
-                Cookie.set('user', data);
-              );            
-        }
+        this.authService.getCurrentUser()
+            .subscribe(
+                data => {
+                    this.user = data;
+                    Cookie.set('user', data);
+                },
+                error =>  this.errorMessage = <any>error
+            );        
     }    
     
 }

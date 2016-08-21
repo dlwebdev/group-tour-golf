@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ROUTER_DIRECTIVES } from '@angular/router';
-import { Http } from "@angular/http";
+
+import { AuthService } from "../services/auth.service";
 
 @Component({
   selector: 'my-navbar',
@@ -13,9 +14,22 @@ export class NavbarComponent implements OnInit {
     userLoggedIn: boolean = false;
     errorMessage: string;
 
-    constructor(private http: Http) { }	
+    constructor(private authService: AuthService) { }	
 
     ngOnInit() {
-        console.log("Navbar here");
+        this.setLoggedInStatus();
     }
+    
+    setLoggedInStatus() {
+        this.authService.getUserAuthStatus()
+            .subscribe(
+                resp => {
+                    console.log('Authentication response: ', resp);
+                    if((resp as any).authenticated) {
+                        this.userLoggedIn = true;    
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );         
+    }     
 }

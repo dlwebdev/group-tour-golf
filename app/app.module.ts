@@ -9,6 +9,9 @@ import { AboutComponent } from "./components/about/about.component";
 import { HomeComponent } from "./components/home/home.component";
 import { NavbarComponent } from "./components/shared/navbar/navbar.component";
 import { LoginComponent } from "./components/login/login.component";
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FriendsComponent } from './components/friends/friends.component';
+import { QuickstartComponent } from './components/quickstart/quickstart.component';
 
 import { AuthService } from "./components/shared/services/auth.service";
 
@@ -27,7 +30,10 @@ import { AuthService } from "./components/shared/services/auth.service";
         NavbarComponent,
         AboutComponent,
         LoginComponent,
-        HomeComponent
+        HomeComponent,
+        DashboardComponent,
+        FriendsComponent,
+        QuickstartComponent
     ],
     bootstrap: [ AppComponent ]
 })

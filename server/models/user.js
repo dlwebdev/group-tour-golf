@@ -9,8 +9,7 @@ var userSchema = new Schema({
     token: String,
     displayName: String,
     username: String
-  },
-  rsvps: Array
+  }
 });
 
 module.exports = mongoose.model('User', userSchema);
