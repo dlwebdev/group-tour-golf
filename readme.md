@@ -17,7 +17,7 @@ npm install && npm run typings
 # run and watch for changes in .ts files
 npm start
 
-# Applciation url: http://localhost:3000
+# Application url: http://localhost:3000
 ```
 
 ## Development
