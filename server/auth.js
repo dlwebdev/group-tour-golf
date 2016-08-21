@@ -3,8 +3,8 @@
 // expose our config directly to our application using module.exports
 module.exports = {
   'twitterAuth': {
-    'consumerKey': 'P1OIsyXvsk4y97OuSqMpdXEFs',
-    'consumerSecret': 'j7ouvXUkEqtvOaRP217Kau3IBrRqMQ7oO2tQlwgjP1rZQhkxZd',
-    'callbackURL': 'https://nightlife-coordinator-app.herokuapp.com/auth/twitter/callback'
+    'consumerKey': '99wrIycSNYTESNedd55IvWgwu',
+    'consumerSecret': 'VRONmSUcU1w6bpOlKBbrFq0CTGVgWTo7wtzBnm2zmcuoFwumUG',
+    'callbackURL': 'https://group-tour-golf-dlwebdev.c9users.io/auth/twitter/callback'
   }    
 };

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/forms';
 import { Cookie } from 'ng2-cookies/ng2-cookies';
-import { Http } from "@angular/http";
+
 //import './rxjs-operators';
+
+import { AuthService } from "../shared/services/auth.service";
 
 @Component({
     selector: 'my-home',
@@ -14,25 +16,33 @@ export class HomeComponent implements OnInit {
     name: string = "Home";
     users: {};
     
+    user: any = '';
+    userId: any = '';    
+    
     newName: string = '';
     cityToSearch: string = '';
     errorMessage: string;
     bars: any[] = [];
     isLoading: boolean = false;    
 
-    constructor(private http: Http) {
-        console.log("GETTING USERS!");
-        
-        http.get("/api/user")
-            .map(data => data.json())
-            .subscribe((data) => this.users = data);
-    }
+    constructor(private authService: AuthService) { }
     
     /**
     * Get the names OnInit
     */
     ngOnInit() {
-        console.log('Go to your home');
+        let user = Cookie.get('user');
+        console.log("user: ", user);
+        
+        if(user) {
+            console.log("User is logged in.");
+        } else {
+            this.authService.getCurrentUser()
+              .subscribe(
+                this.user = data;
+                Cookie.set('user', data);
+              );            
+        }
     }    
     
 }

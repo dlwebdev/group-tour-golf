@@ -17,7 +17,7 @@ router.get('/authenticated', function(req, res, next) {
   res.json({'authenticated': authed});
 });    
     
-router.get('/get-id-of-logged-in', function(req, res, next) {
+router.get('/current-user', function(req, res, next) {
   if (req.isAuthenticated()) {
     res.json({'user': req.user});
   } else {
