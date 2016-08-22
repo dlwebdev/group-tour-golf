@@ -12,6 +12,7 @@ import { SingleRoundComponent } from './components/roundtypes/single/single.comp
 
 import { CourseManagementComponent } from './components/manage/courses/courses.component';
 import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
+import { EditCourseComponent } from './components/manage/courses/edit/edit-course.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, terminal: true },
@@ -24,7 +25,8 @@ export const routes: Routes = [
     { path: 'friends', component: FriendsComponent },
     // Manage courses
     { path: 'manage/courses', component: CourseManagementComponent },
-    { path: 'manage/courses/add', component: AddCourseComponent }
+    { path: 'manage/courses/add', component: AddCourseComponent },
+    { path: 'manage/courses/edit/:id', component: EditCourseComponent }
 ];
 
 export const routing = RouterModule.forRoot(routes, { useHash: true });

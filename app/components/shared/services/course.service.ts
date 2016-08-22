@@ -31,7 +31,22 @@ export class CourseService {
     return this.http.get('/api/courses')
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
+  }
+  
+  getCourse(id:string): Observable<string[]> {
+    return this.http.get('/api/courses/' + id)
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
   }   
+
+  updateCourse(course:Object): Observable<string[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    return this.http.put('/api/courses/' + course._id, JSON.stringify(course), {
+      headers: headers
+    }).map((res) => res.json().course);
+
+  } 
 
   /**
     * Handle HTTP error

@@ -41,9 +41,6 @@ router.get('/:id', function(req, res) {
 });
 
 router.put('/:id', function(req, res) {
-    //let id = req.params.id;
-    //console.log('Will update course with id of: ', id);
-
     var course = req.body;
     var id = course._id;
 

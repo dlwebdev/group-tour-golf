@@ -44,9 +44,11 @@ export class AddCourseComponent {
       location: ''
   };
   
-  constructor(private courseService: CourseService) {}
+  constructor(private router: Router, private courseService: CourseService) {}
     
   saveCourse() {
+    this.course.name = this.course.name + " - " + this.course.teeBox;
+    
     this.courseService.createCourse(this.course)
       .subscribe(
         this.router.navigate(['/manage/courses']);

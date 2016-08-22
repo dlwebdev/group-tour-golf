@@ -18,6 +18,7 @@ import { SingleRoundComponent } from './components/roundtypes/single/single.comp
 
 import { CourseManagementComponent } from './components/manage/courses/courses.component';
 import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
+import { EditCourseComponent } from './components/manage/courses/edit/edit-course.component';
 
 import { AuthService } from "./components/shared/services/auth.service";
 import { CourseService } from "./components/shared/services/course.service";
@@ -44,8 +45,10 @@ import { CourseService } from "./components/shared/services/course.service";
         SingleRoundComponent,
         //FoursomeComponent,
         QuickstartComponent,
+        //Course Management Components
         CourseManagementComponent,
-        AddCourseComponent
+        AddCourseComponent,
+        EditCourseComponent
     ],
     bootstrap: [ AppComponent ]
 })
