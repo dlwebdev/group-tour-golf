@@ -1,0 +1,13 @@
+<div class="container">
+    <h1>Course Management</h1>
+
+    <p>
+        <a [routerLink]="['/manage/courses/add']">Add a Course</a>
+    </p>
+    
+	<div class="list-group course-list">
+		<div *ngFor="let course of courses" class="list-group-item row">
+			<span class="poll-name">{{ course.name }} - {{ course.location }}</span>
+		</div>
+	</div>    
+</div>

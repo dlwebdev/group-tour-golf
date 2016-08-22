@@ -16,7 +16,11 @@ import { QuickstartComponent } from './components/quickstart/quickstart.componen
 import { SingleRoundComponent } from './components/roundtypes/single/single.component';
 //import { FoursomeComponent } from './components/roundtypes/uptofoursome/uptofoursome.component';
 
+import { CourseManagementComponent } from './components/manage/courses/courses.component';
+import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
+
 import { AuthService } from "./components/shared/services/auth.service";
+import { CourseService } from "./components/shared/services/course.service";
 
 @NgModule({
     imports: [
@@ -26,7 +30,8 @@ import { AuthService } from "./components/shared/services/auth.service";
         routing
     ],
     providers: [
-        AuthService
+        AuthService,
+        CourseService
     ],    
     declarations: [
         AppComponent,
@@ -38,7 +43,9 @@ import { AuthService } from "./components/shared/services/auth.service";
         FriendsComponent,
         SingleRoundComponent,
         //FoursomeComponent,
-        QuickstartComponent
+        QuickstartComponent,
+        CourseManagementComponent,
+        AddCourseComponent
     ],
     bootstrap: [ AppComponent ]
 })

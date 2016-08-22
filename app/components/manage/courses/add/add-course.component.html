@@ -1,0 +1,72 @@
+<div class="container">
+    <h1>Creating New Course</h1>
+
+    <!--<pre>{{course | json}}</pre>-->
+
+    <form>
+      <div class="form-group">
+        <label for="courseName">Course Name:</label>
+        <input type="text" [(ngModel)]="course.name" [ngModelOptions]="{standalone: true}" class="form-control" id="courseName" placeholder="Course Name">
+      </div>
+      
+      <div class="form-group">
+        <label for="courseLocation">Location:</label>
+        <input type="text" [(ngModel)]="course.location" [ngModelOptions]="{standalone: true}"class="form-control" id="courseLocation" placeholder="Location">
+      </div>      
+
+      <div class="form-group">
+        <label for="courseTeeBox">Location:</label>
+        <input type="text" [(ngModel)]="course.teeBox" [ngModelOptions]="{standalone: true}"class="form-control" id="courseTeeBox" placeholder="Tee Box">
+      </div>  
+      
+      <div class="form-group">
+        <div class="course-name">{{course.name}} - {{course.teeBox}}</div>
+        <table class="fake-scorecard table table-bordered">
+            <tr class="header">
+                <td>Hole</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>Out</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>In</td>
+                <td>Total</td>
+            </tr>
+			<tr class="row tee-details">
+			    <td>
+                    <div class="hole-yardage">
+                        Yds
+                    </div>
+                    <div class="hole-par">
+                        Par
+                    </div>			        
+			    </td>
+                <td *ngFor="let hole of course.holes">
+                    <div class="hole-yardage">
+                        <input type="text" [(ngModel)]="hole.distance" [ngModelOptions]="{standalone: true}" placeholder="yds"/>
+                    </div>
+                    <div class="hole-par">
+                        <input type="text" [(ngModel)]="hole.par" [ngModelOptions]="{standalone: true}" placeholder="par"/>
+                    </div>
+                </td>
+			</tr>            
+        </table>
+      </div>      
+      
+      <button type="button" (click)="saveCourse()" class="btn btn-default">Save</button>
+    </form>
+</div>

@@ -14,6 +14,7 @@ var MongoStore = require('connect-mongo')(session);
 
 var rsvps = require('./routes/rsvps');
 var users = require('./routes/users');
+var courses = require('./routes/courses');
 
 require('./server/passport')(passport);
 
@@ -44,7 +45,7 @@ var yelp = new Yelp({
   token_secret: 'Sh0M1K0IziMwTBernLlqeKH6kIw'
 });
 
-mongoose.connect('mongodb://admin:admin@ds145405.mlab.com:45405/dlw-nightlife-app'); // Connect to MongoDB database for polling app.  
+mongoose.connect('mongodb://admin:admin@ds013486.mlab.com:13486/group-golf-tour'); // Connect to MongoDB database for polling app.  
 
 // Make sure mongod is running! If not, log an error and exit. 
 
@@ -134,6 +135,7 @@ var Rsvp = require('./server/models/rsvp');
 
 app.use('/api/user', users);
 app.use('/api/rsvps', rsvps);
+app.use('/api/courses', courses);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

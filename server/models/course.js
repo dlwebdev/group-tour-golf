@@ -10,12 +10,7 @@ var courseSchema = new Schema({
     userId: String,
     userName: String
   },
-  tees: {
-    teeLabel: String,
-    totalDistance: Number,
-    par: Number,
-    holes: Array  
-  },
+  holes: Array,
   location: String
 });
 

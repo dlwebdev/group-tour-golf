@@ -10,6 +10,9 @@ import { QuickstartComponent } from './components/quickstart/quickstart.componen
 import { SingleRoundComponent } from './components/roundtypes/single/single.component';
 //import { FoursomeComponent } from './components/roundtypes/uptofoursome/uptofoursome.component';
 
+import { CourseManagementComponent } from './components/manage/courses/courses.component';
+import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
+
 export const routes: Routes = [
     { path: '', component: HomeComponent, terminal: true },
     { path: 'quickstart', component: QuickstartComponent },
@@ -18,7 +21,10 @@ export const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent },
-    { path: 'friends', component: FriendsComponent }
+    { path: 'friends', component: FriendsComponent },
+    // Manage courses
+    { path: 'manage/courses', component: CourseManagementComponent },
+    { path: 'manage/courses/add', component: AddCourseComponent }
 ];
 
 export const routing = RouterModule.forRoot(routes, { useHash: true });
