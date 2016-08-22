@@ -13,7 +13,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { QuickstartComponent } from './components/quickstart/quickstart.component';
 
-//import { SingleRoundComponent } from './components/roundtypes/single/single.component';
+import { SingleRoundComponent } from './components/roundtypes/single/single.component';
 //import { FoursomeComponent } from './components/roundtypes/uptofoursome/uptofoursome.component';
 
 import { AuthService } from "./components/shared/services/auth.service";
@@ -36,7 +36,7 @@ import { AuthService } from "./components/shared/services/auth.service";
         HomeComponent,
         DashboardComponent,
         FriendsComponent,
-        //SingleRoundComponent,
+        SingleRoundComponent,
         //FoursomeComponent,
         QuickstartComponent
     ],
