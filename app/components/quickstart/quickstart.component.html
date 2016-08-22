@@ -3,27 +3,52 @@
 
     <p>Ask what they want to do. Give dropdowns for "Personal Round", "Join Tournament"</p>
     
-    <p>
-        <a class="btn btn-primary btn-lg" [routerLink]="['start-round/single']" role="button">Personal Round &raquo;</a><br><br>
-        Playing by yourself. You can also add a user to your scorecard. So, if your playing with one 
-        or more friends in a foursome, you can see each others scores here. Uses the roundtype - single format.
-    </p>
+    <div class="panel panel-info">
+        <div class="panel-heading">4-Some or Less</div>
+        <div class="panel-body">
+            <p>
+                Playing by yourself. You can also add a user to your scorecard. So, if you're playing with one 
+                or more friends in a foursome, you can see each others scores here. Uses the roundtype - single format.
+                <br>
+                <br><a class="btn btn-primary btn-lg" [routerLink]="['start-round/single']" role="button">Start Round &raquo;</a>
+            </p>   
+        </div>
+    </div>    
     
-    <p>
-        <b>Create a Tournament</b> - Let's this user control the tournament details. Invite people to join the 
-        tournament. Give them a search bar that allows them to quick filter users to add to tournament. Also, let users 
-        join a tournament and they will show up as pending. The person starting tournament can approve them to join.
-    </p>
-    
-    <p>
-        <b>Manage active tournament</b> - Add or remove players from the current tournament.
-    </p>
-    
-    <p>
-        <b>Join a tournament</b> - Send an invitation to join a pending tournament. Must be approved by creator.
-    </p>
-    
-    <p>
-        <b>TOUR EVENT</b> - The tour will be managed by someone else. Tour consists of multiple tournaments.
-    </p>
+    <div class="panel panel-success">
+        <div class="panel-heading">Tournament Mode</div>
+        <div class="panel-body">
+            <p>
+                <b>Create a Tournament</b> - Let's this user control the tournament details. Invite people to join the 
+                tournament. Give them a search bar that allows them to quick filter users to add to tournament. Also, let users 
+                join a tournament and they will show up as pending. The person starting tournament can approve them to join.
+                <br>
+                <br><a class="btn btn-primary btn-lg" [routerLink]="['tournament/create']" role="button">Create Tourney &raquo;</a>                
+            </p>  
+            
+            <p>
+                <b>Join a tournament</b> - Send an invitation to join a pending tournament. Must be approved by creator.
+                <br>
+                <br><a class="btn btn-primary btn-lg" [routerLink]="['tournament/join']" role="button">Join Active Tourney &raquo;</a>                                
+            </p>            
+            
+            <p>
+                <b>Manage active tournament</b> - Add or remove players from the current tournament.
+                <br>
+                <br><a class="btn btn-primary btn-lg" [routerLink]="['tournament/manage']" role="button">Manage Active Tourney &raquo;</a>                
+            </p>            
+        </div>
+    </div>    
+
+    <div class="panel panel-warning">
+        <div class="panel-heading">Tour Mode</div>
+        <div class="panel-body">
+            <p>
+                <b>TOUR EVENT</b> - The tour will be managed by someone else. Tour consists of multiple tournaments.
+                <br>
+                <br><a class="btn btn-primary btn-lg" [routerLink]="['start-round/single']" role="button">Check In &raquo;</a>
+            </p>   
+        </div>
+    </div> 
+
 </div>
