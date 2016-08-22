@@ -7,9 +7,14 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FriendsComponent } from './components/friends/friends.component';
 import { QuickstartComponent } from './components/quickstart/quickstart.component';
 
+//import { SingleRoundComponent } from './components/roundtypes/single/single.component';
+//import { FoursomeComponent } from './components/roundtypes/uptofoursome/uptofoursome.component';
+
 export const routes: Routes = [
     { path: '', component: HomeComponent, terminal: true },
     { path: 'quickstart', component: QuickstartComponent },
+    //{ path: 'start-round/single', component: SingleRoundComponent },
+    //{ path: 'start-round/multi', component: FoursomeComponent },
     { path: 'about', component: AboutComponent },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent },
