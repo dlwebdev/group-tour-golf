@@ -22,7 +22,7 @@ export class ChooseCourseDirective {
     }	
     
     playCourse(i:any) {
-        console.log("Selected course: ", this.courses[i]);
+        //console.log("Selected course: ", this.courses[i]);
         this.chosenCourse = this.courses[i];
         this.courseChosen.emit(this.chosenCourse);
     }

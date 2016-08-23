@@ -79,3 +79,11 @@ tr.header {
 .score-picker {
   margin-bottom: 20px;
 }
+
+.pad-left .arrow-container {
+  margin-left:15px;
+}
+
+.course-info {
+  background: #f2ffe6;
+}

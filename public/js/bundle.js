@@ -20412,7 +20412,6 @@ $__System.registerDynamic("1d", ["3", "1e"], true, function($__require, exports,
       });
     }
     ChooseCourseDirective.prototype.playCourse = function(i) {
-      console.log("Selected course: ", this.courses[i]);
       this.chosenCourse = this.courses[i];
       this.courseChosen.emit(this.chosenCourse);
     };
@@ -20464,9 +20463,9 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
         backNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         holes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       };
+      this.scoreOptions = [1, 2, 3, 4, 5, 6, 7, 8];
     }
     SingleRoundComponent.prototype.courseChosen = function(course) {
-      console.log("I HAVE RECEIVED THE CHOSEN COURSE!!", course);
       this.chosenCourse = course;
       this.frontNine = this.chosenCourse.holes.slice(0, 10);
       this.backNine = this.chosenCourse.holes.slice(10);
@@ -20478,6 +20477,40 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
     SingleRoundComponent.prototype.incrementHole = function() {
       this.currentHoleIndex++;
       this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+    };
+    SingleRoundComponent.prototype.setHoleScore = function(score) {
+      this.userScoring.holes[this.currentHoleIndex] = score;
+      if (this.currentHoleIndex < 10) {
+        if (this.currentHoleIndex === 10) {
+          console.log("Tally for front 9 happens automatically as you play.");
+        } else {
+          console.log("Setting front nine hole score.");
+          this.userScoring.frontNineScores[this.currentHoleIndex] = score;
+        }
+      } else {
+        console.log("Setting back nine hole score.");
+        var back9ref = this.currentHoleIndex - 10;
+        if (back9ref > 19) {
+          console.log("This is either the OUT or TOTAL score. They are tallied automatically.");
+        } else {
+          this.userScoring.backNineScores[back9ref] = score;
+        }
+      }
+      this.tallyCurrentTotals();
+    };
+    SingleRoundComponent.prototype.tallyCurrentTotals = function() {
+      var currentFrontNineTotal = this.userScoring.frontNineScores.reduce(this.add, 0);
+      this.userScoring.holes[10] = currentFrontNineTotal;
+      this.userScoring.frontNineScores[10] = currentFrontNineTotal;
+      var currentBackNineTotal = this.userScoring.backNineScores.reduce(this.add, 0);
+      this.userScoring.holes[19] = currentBackNineTotal;
+      this.userScoring.backNineScores[10] = currentBackNineTotal;
+      this.userScoring.totalScore = currentFrontNineTotal + currentBackNineTotal;
+      this.userScoring.holes[20] = this.userScoring.totalScore;
+      this.userScoring.backNineScores[11] = this.userScoring.totalScore;
+    };
+    SingleRoundComponent.prototype.add = function(a, b) {
+      return a + b;
     };
     SingleRoundComponent.prototype.decrementHole = function() {
       this.currentHoleIndex--;
