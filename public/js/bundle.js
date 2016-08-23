@@ -20475,6 +20475,14 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
       this.currentHoleIndex = 0;
       this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
     };
+    SingleRoundComponent.prototype.incrementHole = function() {
+      this.currentHoleIndex++;
+      this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+    };
+    SingleRoundComponent.prototype.decrementHole = function() {
+      this.currentHoleIndex--;
+      this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+    };
     SingleRoundComponent = __decorate([core_1.Component({
       selector: 'my-single',
       templateUrl: 'components/roundtypes/single/single.component.html',

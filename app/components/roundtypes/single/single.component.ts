@@ -45,4 +45,17 @@ export class SingleRoundComponent {
     this.currentHoleIndex = 0;
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
   }    
+  
+  incrementHole() {
+    this.currentHoleIndex++;
+    //console.log("Current Hole Index: ", this.currentHoleIndex);
+    this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+  }
+  
+  decrementHole() {
+    this.currentHoleIndex--;  
+    //console.log("Current Hole Index: ", this.currentHoleIndex);
+    this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+  }
+  
 }

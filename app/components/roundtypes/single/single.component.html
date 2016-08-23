@@ -13,94 +13,6 @@
     <div *ngIf="courseHasBeenChosen">
         <div class="course-name">{{chosenCourse.name}}</div>
         
-        <div class="row">
-            <div class="col-xs-1">&nbsp;</div>
-            <div class="col-xs-1">1</div>
-            <div class="col-xs-1">2</div>
-            <div class="col-xs-1">3</div>
-            <div class="col-xs-1">4</div>
-            <div class="col-xs-1">5</div>
-            <div class="col-xs-1">6</div>
-            <div class="col-xs-1">7</div>
-            <div class="col-xs-1">8</div>
-            <div class="col-xs-1">9</div>
-            <div class="col-xs-1">Out</div>
-            <div class="col-xs-1">&nbsp;</div>
-        </div>
-        <div class="row">
-            <div class="col-xs-1">
-                <div class="hole-yardage">
-                    Yds
-                </div>
-                <div class="hole-par">
-                    Par
-                </div>            
-            </div>
-            <div *ngFor="let hole of frontNine" class="col-xs-1">
-                <div class="hole-yardage">
-                    {{hole.distance}}
-                </div>
-                <div class="hole-par">
-                    {{hole.par}}
-                </div>            
-            </div>
-            <div class="col-xs-1">&nbsp;</div>
-        </div> 
-        
-        <div class="row">
-            <div class="col-xs-1">
-                Score            
-            </div>  
-            <div *ngFor="let score of userScoring.frontNineScores" class="col-xs-1">
-                {{score}}
-            </div>    
-            <div class="col-xs-1">&nbsp;</div>
-        </div>
-        
-        <div class="row">
-            <div class="col-xs-1">&nbsp;</div>
-            <div class="col-xs-1">10</div>
-            <div class="col-xs-1">11</div>
-            <div class="col-xs-1">12</div>
-            <div class="col-xs-1">13</div>
-            <div class="col-xs-1">14</div>
-            <div class="col-xs-1">15</div>
-            <div class="col-xs-1">16</div>
-            <div class="col-xs-1">17</div>
-            <div class="col-xs-1">18</div>
-            <div class="col-xs-1">Out</div>
-            <div class="col-xs-1">Ttl</div>
-        </div>
-        <div class="row">
-            <div class="col-xs-1">
-                <div class="hole-yardage">
-                    Yds
-                </div>
-                <div class="hole-par">
-                    Par
-                </div>            
-            </div>
-            <div *ngFor="let hole of backNine" class="col-xs-1">
-                <div class="hole-yardage">
-                    {{hole.distance}}
-                </div>
-                <div class="hole-par">
-                    {{hole.par}}
-                </div>            
-            </div>
-        </div> 
-        <div class="row">
-            <div class="col-xs-1">
-                Score            
-            </div>  
-            <div *ngFor="let score of userScoring.backNineScores" class="col-xs-1">
-                {{score}}
-            </div>            
-        </div>        
-        
-        
-        <br><hr><br>
-        
         <table class="fake-scorecard table table-bordered">
             <tr class="header">
                 <td>&nbsp;</td>
@@ -179,29 +91,46 @@
             </tr>            
         </table>        
         
-        <div class="current-hole-container row">
+        <div class="current-hole-container row centered">
             
             <!--Current Hole: {{ currentHole | json }}-->
             
-            <div class="current-hole-number row">
-                <h1 class="text-center">Hole {{ currentHole.hole }}</h1>
-            </div>
-            <div class="row text-center">
-                <span>Par {{ currentHole.par }} - {{ currentHole.distance }} yds</span>
-            </div>
-            
-            <div class="row text-center">
-                <div class="btn-group" role="group" aria-label="Choose Score">
-                  <button type="button" class="btn btn-default">1</button>
-                  <button type="button" class="btn btn-default">2</button>  
-                  <button type="button" class="btn btn-default">3</button>  
-                  <button type="button" class="btn btn-default">4</button>  
-                  <button type="button" class="btn btn-default">5</button>  
-                  <button type="button" class="btn btn-default">6</button>
-                  <button type="button" class="btn btn-default">7</button>
-                  <button type="button" class="btn btn-default">8</button>
+            <div class="col-xs-8 col-md-4">
+                <div class="row">
+                    <div class="col-xs-2">
+                        <div *ngIf="currentHoleIndex > 0" class="arrow-container" (click)="decrementHole()">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        </div>
+                    </div>  
+                    <div class="col-xs-8">
+                        <div class="current-hole-number row">
+                            <h1 class="text-center">Hole {{ currentHole.hole }}</h1>
+                        </div>
+                        <div class="row text-center">
+                            <span>Par {{ currentHole.par }} - {{ currentHole.distance }} yds</span>
+                        </div>
+                        
+                        <div class="row text-center">
+                            <div class="btn-group" role="group" aria-label="Choose Score">
+                              <button type="button" class="btn btn-default">1</button>
+                              <button type="button" class="btn btn-default">2</button>  
+                              <button type="button" class="btn btn-default">3</button>  
+                              <button type="button" class="btn btn-default">4</button>  
+                              <button type="button" class="btn btn-default">5</button>  
+                              <button type="button" class="btn btn-default">6</button>
+                              <button type="button" class="btn btn-default">7</button>
+                              <button type="button" class="btn btn-default">8</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div *ngIf="currentHoleIndex < 18" class="arrow-container" (click)="incrementHole()">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        </div>
+                    </div>                    
                 </div>
             </div>
+            
         </div>
         
     </div>
