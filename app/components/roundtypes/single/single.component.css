@@ -11,3 +11,34 @@ ul {
   list-style-type: none;
   padding: 0 0 0 8px;
 }
+
+.fake-scorecard td input {
+    width: 35px;
+}
+
+.fake-scorecard .header td {
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .modal-header:after, .modal-header:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
+    display: table;
+    content: none;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+  padding: 0;
+}
+
+.hole-par {
+  border-top: 1px solid #e3e3e3;
+}
+
+.tee-details td {
+  text-align: center;
+}
+
+tr.header {
+  background: #e3e3e3;
+}

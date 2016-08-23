@@ -1,0 +1,11 @@
+<!--Courses: <pre>{{courses | json}}</pre>-->
+
+<div class="choose-course">
+    <h2>Choose Course to Play</h2>
+    
+	<div class="list-group course-list">
+		<div *ngFor="let course of courses; let i = index" class="list-group-item row">
+			<span (click)="playCourse(i)" class="poll-name">{{ i }} : {{ course.name }} - {{ course.location }}</span>
+		</div>
+	</div>  
+</div>

@@ -1,5 +1,87 @@
 <div class="container">
-    <h1>Single Round</h1>
+    <!--<h1 class="text-center">Regular Mode</h1>-->
+    
+    <!--Chosen Course: <pre>{{chosenCourse | json}}</pre>-->
+    
     <p>This is the type of view used during a personal round or by each person during a tournament.</p>
     <p>Do a hole by hole type view where you enter score then go to next hole.</p>
+    
+    <div *ngIf="!courseHasBeenChosen" class="choose-course-container">
+        <course-chooser (courseChosen)='courseChosen($event)'></course-chooser>
+    </div>
+    
+    <div *ngIf="courseHasBeenChosen">
+        <div class="course-name">{{chosenCourse.name}}</div>
+        <table class="fake-scorecard table table-bordered">
+            <tr class="header">
+                <td>Hole</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>Out</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>In</td>
+                <td>Total</td>
+            </tr>
+			<tr class="row tee-details">
+			    <td>
+                    <div class="hole-yardage">
+                        Yds
+                    </div>
+                    <div class="hole-par">
+                        Par
+                    </div>			        
+			    </td>
+                <td *ngFor="let hole of chosenCourse.holes">
+                    <div class="hole-yardage">
+                        {{hole.distance}}
+                    </div>
+                    <div class="hole-par">
+                        {{hole.par}}
+                    </div>
+                </td>
+			</tr>            
+        </table>
+        
+        <div class="current-hole-container row">
+            
+            <!--Current Hole: {{ currentHole | json }}-->
+            
+            <div class="current-hole-number row">
+                <h1 class="text-center">Hole {{ currentHole.hole }}</h1>
+            </div>
+            <div class="row text-center">
+                <span>Par {{ currentHole.par }} - {{ currentHole.distance }} yds</span>
+            </div>
+            
+            <div class="row text-center">
+                <div class="btn-group" role="group" aria-label="Choose Score">
+                  <button type="button" class="btn btn-default">1</button>
+                  <button type="button" class="btn btn-default">2</button>  
+                  <button type="button" class="btn btn-default">3</button>  
+                  <button type="button" class="btn btn-default">4</button>  
+                  <button type="button" class="btn btn-default">5</button>  
+                  <button type="button" class="btn btn-default">6</button>
+                  <button type="button" class="btn btn-default">7</button>
+                  <button type="button" class="btn btn-default">8</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
 </div>
