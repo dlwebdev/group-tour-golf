@@ -14,7 +14,7 @@
         <div class="course-name">{{chosenCourse.name}}</div>
         
         <div class="row">
-            <div class="col-xs-2">&nbsp;</div>
+            <div class="col-xs-1">&nbsp;</div>
             <div class="col-xs-1">1</div>
             <div class="col-xs-1">2</div>
             <div class="col-xs-1">3</div>
@@ -25,9 +25,10 @@
             <div class="col-xs-1">8</div>
             <div class="col-xs-1">9</div>
             <div class="col-xs-1">Out</div>
+            <div class="col-xs-1">&nbsp;</div>
         </div>
         <div class="row">
-            <div class="col-xs-2">
+            <div class="col-xs-1">
                 <div class="hole-yardage">
                     Yds
                 </div>
@@ -43,15 +44,58 @@
                     {{hole.par}}
                 </div>            
             </div>
+            <div class="col-xs-1">&nbsp;</div>
         </div> 
         <div class="row">
-            <div class="col-xs-2">
+            <div class="col-xs-1">
                 Score            
             </div>  
             <div *ngFor="let score of userScoring.frontNineScores" class="col-xs-1">
                 {{score}}
-            </div>            
+            </div>    
+            <div class="col-xs-1">&nbsp;</div>
         </div>
+        
+        <div class="row">
+            <div class="col-xs-1">&nbsp;</div>
+            <div class="col-xs-1">10</div>
+            <div class="col-xs-1">11</div>
+            <div class="col-xs-1">12</div></div>
+            <div class="col-xs-1">13</div>
+            <div class="col-xs-1">14</div>
+            <div class="col-xs-1">15</div>
+            <div class="col-xs-1">16</div>
+            <div class="col-xs-1">17</div>
+            <div class="col-xs-1">18</div>
+            <div class="col-xs-1">Out</div>
+            <div class="col-xs-1">Ttl</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-1">
+                <div class="hole-yardage">
+                    Yds
+                </div>
+                <div class="hole-par">
+                    Par
+                </div>            
+            </div>
+            <div *ngFor="let hole of backNine" class="col-xs-1">
+                <div class="hole-yardage">
+                    {{hole.distance}}
+                </div>
+                <div class="hole-par">
+                    {{hole.par}}
+                </div>            
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-xs-1">
+                Score            
+            </div>  
+            <div *ngFor="let score of userScoring.backNineScores" class="col-xs-1">
+                {{score}}
+            </div>            
+        </div>        
         
         
         <br><hr><br>
