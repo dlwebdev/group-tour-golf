@@ -75,3 +75,7 @@ tr.header {
 .arrow-container .glyphicon {
   font-size: 40px;
 }
+
+.score-picker {
+  margin-bottom: 20px;
+}
