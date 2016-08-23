@@ -12,9 +12,10 @@
     
     <div *ngIf="courseHasBeenChosen">
         <div class="course-name">{{chosenCourse.name}}</div>
+        
         <table class="fake-scorecard table table-bordered">
             <tr class="header">
-                <td>Hole</td>
+                <td>&nbsp;</td>
                 <td>1</td>
                 <td>2</td>
                 <td>3</td>
@@ -25,17 +26,6 @@
                 <td>8</td>
                 <td>9</td>
                 <td>Out</td>
-                <td>10</td>
-                <td>11</td>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-                <td>15</td>
-                <td>16</td>
-                <td>17</td>
-                <td>18</td>
-                <td>In</td>
-                <td>Total</td>
             </tr>
 			<tr class="row tee-details">
 			    <td>
@@ -46,7 +36,7 @@
                         Par
                     </div>			        
 			    </td>
-                <td *ngFor="let hole of chosenCourse.holes">
+                <td *ngFor="let hole of frontNine">
                     <div class="hole-yardage">
                         {{hole.distance}}
                     </div>
@@ -54,8 +44,52 @@
                         {{hole.par}}
                     </div>
                 </td>
-			</tr>            
-        </table>
+			</tr> 
+            <tr class="row tee-details">
+                <td>Score</td>
+                <td *ngFor="let score of userScoring.frontNineScores">
+                    {{score}}
+                </td>                
+            </tr>	
+            <tr class="header">
+                <td>&nbsp;</td>
+                <td>10</td>
+                <td>11</td>
+                <td>12</td>
+                <td>13</td>
+                <td>14</td>
+                <td>15</td>
+                <td>16</td>
+                <td>17</td>
+                <td>18</td>
+                <td>In</td>
+                <td>Total</td>                
+            </tr>
+			<tr class="row tee-details">
+			    <td>
+                    <div class="hole-yardage">
+                        Yds
+                    </div>
+                    <div class="hole-par">
+                        Par
+                    </div>			        
+			    </td>
+                <td *ngFor="let hole of backNine">
+                    <div class="hole-yardage">
+                        {{hole.distance}}
+                    </div>
+                    <div class="hole-par">
+                        {{hole.par}}
+                    </div>
+                </td>
+			</tr>             
+            <tr class="row tee-details">
+                <td>Score</td>
+                <td *ngFor="let score of userScoring.backNineScores">
+                    {{score}}
+                </td>                
+            </tr>            
+        </table>        
         
         <div class="current-hole-container row">
             

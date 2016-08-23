@@ -20460,12 +20460,16 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
       this.currentHoleIndex = -1;
       this.userScoring = {
         totalScore: 0,
-        holes: []
+        frontNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        backNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        holes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       };
     }
     SingleRoundComponent.prototype.courseChosen = function(course) {
       console.log("I HAVE RECEIVED THE CHOSEN COURSE!!", course);
       this.chosenCourse = course;
+      this.frontNine = this.chosenCourse.holes.slice(0, 10);
+      this.backNine = this.chosenCourse.holes.slice(10);
       this.courseHasBeenChosen = true;
       console.log("Hide the course chooser and BEGIN ROUND HERE.");
       this.currentHoleIndex = 0;
