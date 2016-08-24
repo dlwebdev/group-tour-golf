@@ -87,3 +87,7 @@ tr.header {
 .course-info {
   background: #f2ffe6;
 }
+
+.user-current-over-under {
+  font-size: 35px;
+}

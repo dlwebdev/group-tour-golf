@@ -20459,6 +20459,9 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
       this.currentHoleIndex = -1;
       this.userScoring = {
         totalScore: 0,
+        frontNineTotal: 0,
+        backNineTotal: 0,
+        scoreToPar: 0,
         frontNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         backNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         holes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -20476,12 +20479,22 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
     };
     SingleRoundComponent.prototype.incrementHole = function() {
       this.currentHoleIndex++;
+      if (this.currentHoleIndex == 9) {
+        this.currentHoleIndex++;
+      }
+      this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+    };
+    SingleRoundComponent.prototype.decrementHole = function() {
+      this.currentHoleIndex--;
+      if (this.currentHoleIndex == 9) {
+        this.currentHoleIndex--;
+      }
       this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
     };
     SingleRoundComponent.prototype.setHoleScore = function(score) {
       this.userScoring.holes[this.currentHoleIndex] = score;
-      if (this.currentHoleIndex < 10) {
-        if (this.currentHoleIndex === 10) {
+      if (this.currentHoleIndex < 9) {
+        if (this.currentHoleIndex === 9) {
           console.log("Tally for front 9 happens automatically as you play.");
         } else {
           console.log("Setting front nine hole score.");
@@ -20499,22 +20512,40 @@ $__System.registerDynamic("e", ["3", "16", "7", "1d"], true, function($__require
       this.tallyCurrentTotals();
     };
     SingleRoundComponent.prototype.tallyCurrentTotals = function() {
-      var currentFrontNineTotal = this.userScoring.frontNineScores.reduce(this.add, 0);
-      this.userScoring.holes[10] = currentFrontNineTotal;
-      this.userScoring.frontNineScores[10] = currentFrontNineTotal;
-      var currentBackNineTotal = this.userScoring.backNineScores.reduce(this.add, 0);
+      var currentFrontNineTotal = this.userScoring.frontNineScores.slice(0, 9).reduce(this.add, 0);
+      this.userScoring.holes[9] = currentFrontNineTotal;
+      this.userScoring.frontNineScores[9] = currentFrontNineTotal;
+      var currentBackNineTotal = this.userScoring.backNineScores.slice(0, 9).reduce(this.add, 0);
       this.userScoring.holes[19] = currentBackNineTotal;
-      this.userScoring.backNineScores[10] = currentBackNineTotal;
+      this.userScoring.backNineScores[9] = currentBackNineTotal;
       this.userScoring.totalScore = currentFrontNineTotal + currentBackNineTotal;
       this.userScoring.holes[20] = this.userScoring.totalScore;
-      this.userScoring.backNineScores[11] = this.userScoring.totalScore;
+      this.userScoring.backNineScores[10] = this.userScoring.totalScore;
+      var tmpUserToPar = 0;
+      console.log("");
+      console.log("TALLYING OVER/UNDER");
+      for (var i = 0; i < this.chosenCourse.holes.length; i++) {
+        var currentHole = this.chosenCourse.holes[i];
+        var userScore = this.userScoring.holes[i];
+        if ((userScore > 0) && (i !== 9) && (i < 18)) {
+          console.log("");
+          console.log("Par of current hole being checked: ", currentHole.par);
+          console.log("User made a : ", userScore);
+          if (userScore > currentHole.par) {
+            console.log("User was this many over par this hole: ", userScore - currentHole.par);
+            tmpUserToPar = tmpUserToPar + (userScore - currentHole.par);
+          } else if (userScore < currentHole.par) {
+            console.log("User was this many UNDER par this hole: ", currentHole.par - userScore);
+            tmpUserToPar = tmpUserToPar - (currentHole.par - userScore);
+          }
+          console.log("Current tally: ", tmpUserToPar);
+        }
+      }
+      this.userScoring.scoreToPar = tmpUserToPar;
+      console.log("User is currently to par: ", this.userScoring.scoreToPar);
     };
     SingleRoundComponent.prototype.add = function(a, b) {
       return a + b;
-    };
-    SingleRoundComponent.prototype.decrementHole = function() {
-      this.currentHoleIndex--;
-      this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
     };
     SingleRoundComponent = __decorate([core_1.Component({
       selector: 'my-single',

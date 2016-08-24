@@ -50,7 +50,7 @@
             <tr class="row tee-details">
                 <td>You</td>
                 <td *ngFor="let score of userScoring.frontNineScores">
-                    {{score}}
+                    {{ score === 0 ? '': score }}
                 </td>                
             </tr>	
             
@@ -93,7 +93,7 @@
             <tr class="row tee-details">
                 <td>You</td>
                 <td *ngFor="let score of userScoring.backNineScores">
-                    {{score}}
+                    {{ score === 0 ? '': score }}
                 </td>                
             </tr>     
             
@@ -133,7 +133,11 @@
                 <div class="btn-group" role="group" aria-label="Choose Score">
                     <button *ngFor="let option of scoreOptions" type="button" (click)="setHoleScore(option)" class="btn btn-default">{{option}}</button>
                 </div>
-            </div>            
+            </div>  
+        </div>
+        
+        <div class="row text-center user-current-over-under" [style.color] = "userScoring.scoreToPar < 0 ? 'red': 'black'">
+            {{ userScoring.scoreToPar > 0 ? '+' : '' }}{{ userScoring.scoreToPar === 0 ? 'E': userScoring.scoreToPar }}
         </div>
         
     </div>
