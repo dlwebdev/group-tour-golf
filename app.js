@@ -15,6 +15,7 @@ var MongoStore = require('connect-mongo')(session);
 var rsvps = require('./routes/rsvps');
 var users = require('./routes/users');
 var courses = require('./routes/courses');
+var accounts = require('./routes/accounts');
 
 require('./server/passport')(passport);
 
@@ -35,15 +36,6 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'app')));
-
-var Yelp = require('yelp');
-
-var yelp = new Yelp({
-  consumer_key: '63BCSdCRdfJ1bZupxB5OeA',
-  consumer_secret: 'tJf5idBAYm-sLyeEtaNYojZBaXk',
-  token: 'H2XjHsW_dE0ILIPpqcEQ5HxzdUUfignR',
-  token_secret: 'Sh0M1K0IziMwTBernLlqeKH6kIw'
-});
 
 mongoose.connect('mongodb://admin:admin@ds013486.mlab.com:13486/group-golf-tour'); // Connect to MongoDB database for polling app.  
 
@@ -71,71 +63,79 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());   
   
+var Account = require('./server/models/account');
+  
 app.get('/auth/twitter',
-  passport.authenticate('twitter'));
+  passport.authenticate('twitter')
+);
 
 app.get('/auth/twitter/callback', 
   passport.authenticate('twitter', { failureRedirect: '/' }),
   function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });  
-  
-var Rsvp = require('./server/models/rsvp');
-
-  // Endpoint to retrieve local bars from yelp ip. location param passed in is the city you desire results for
-  app.get('/api/yelp-search/:location', function(req, res) {
-    var bars = [];
+    // Successful authentication, create account or update last log in time and then redirect home.
+    
+    var existingAccount;
+    var hasAccount = false;
+    var twitterId = req.user.twitter.id;
     var currentDate = moment().format('MM-DD-YYYY');
     
-    yelp.search({ term: 'bars', location: req.params.location })
-    .then(function (data) {
-      bars = data.businesses;
+    console.log("WILL LOOK FOR ACCOUNT WITH TWITTER ID OF: ", twitterId);
+    
+    Account.find({id: twitterId}, function (err, account) {
+      console.log('Found account with that twitter id: ', account);
+      if(err) console.log('Err: ', err);
       
-      var barsProcessed = 1;
-      //console.log('Should run ' + bars.length + ' times.');
+      console.log("Working with account: ", account);
       
-      async.forEachLimit(bars, 5, function(bar, callback) {
-        var barId = bar.id;
-        var barRsvps = 0;
-        var currentBar;
+      if(account) {
+        existingAccount = account[0]; 
+      }
+    }).then(function() {
+      
+      if(existingAccount) {
+        //console.log("TRUE");
+          hasAccount = true;
+      }
+
+      if(hasAccount) {
+        console.log('WILL UPDATE Account by updating last login: ', existingAccount);
         
-        Rsvp.find({bar: barId, dateAdded: currentDate}, function (err, bar) {
-          if(err) console.log('Err: ', err);
-          currentBar = bar;
-        }).then(function() {         
-          barRsvps = 0;
-          bar.userIsGoing = 0;
-          if(currentBar.length) {
-            barRsvps = currentBar[0].numberAttending;                
-          }
-          bar.totalRSVPs = barRsvps;
-          callback();
+        existingAccount.lastLogin = currentDate;
+      
+        Account.update({id: twitterId}, existingAccount, {upsert: true}, function (err, obj) {
+            if(err) console.log('Err: ', err);
+            console.log('UPDATED SUCCESSFULLY!');
+            res.redirect('/');
+        });     
+        
+      } else { 
+        console.log('WILL CREATE NEW Account for this user.');
+      
+        var account = new Account({
+          id: twitterId,
+          username: req.user.twitter.username,
+          handicap: 0,
+          friends: [],
+          rounds: [],
+          currentRound: {},
+          lastLogin: currentDate
         });
-        
-        if(barsProcessed === bars.length) {
-          // All bars processed. Send back results immediately.
-          res.send(bars);
-        }
-        
-        //console.log('Processed bar: ', barsProcessed);
-        barsProcessed++;
-      }, 
-      function(err) {
-        if (err) console.log(err);
-        res.send(bars);
-      });
-    })
-    .catch(function (err) {
-      console.error(err);
+    
+        account.save(function (err, account) {
+          if (err) { console.log('error saving account: ', err); }
+          res.redirect('/');
+        });         
+      }
+      
     });
     
-  });
-  
+  }
+);  
 
 app.use('/api/user', users);
 app.use('/api/rsvps', rsvps);
 app.use('/api/courses', courses);
+app.use('/api/accounts', accounts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -167,6 +167,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

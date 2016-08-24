@@ -22,6 +22,8 @@ import { EditCourseComponent } from './components/manage/courses/edit/edit-cours
 
 import { AuthService } from "./components/shared/services/auth.service";
 import { CourseService } from "./components/shared/services/course.service";
+import { FriendsService } from "./components/shared/services/friends.service";
+import { AccountsService } from "./components/shared/services/accounts.service";
 
 @NgModule({
     imports: [
@@ -32,7 +34,9 @@ import { CourseService } from "./components/shared/services/course.service";
     ],
     providers: [
         AuthService,
-        CourseService
+        CourseService,
+        FriendsService,
+        AccountsService
     ],    
     declarations: [
         AppComponent,

@@ -1,9 +1,27 @@
 <div class="container">
-    <p>Friends</p>
+    <h2 class="text-center">Manage Friends</h2>
 
-    <p>Add/Remove/View Friends</p>
+    <p>Current Friends</p>
     
-    <h2 class="sub-header">Friends Recent Rounds</h2>
+	  <div class="list-group friend-list">
+  		<div *ngFor="let friend of friends; let i = index" class="list-group-item row">
+  			<span class="account-name">{{ friend.username }}</span>
+  		</div>
+	  </div>    
+
+    <hr>
+    
+    <p>Add Friends</p>
+    
+	  <div class="list-group account-list">
+  		<div *ngFor="let account of accounts; let i = index" class="list-group-item row">
+  			<span (click)="addFriend(i)" class="account-name">{{ account.username }}</span>
+  		</div>
+	  </div>  
+	  
+	  <hr>
+    
+    <h2 class="sub-header">Friends Recent Rounds *HARDCODED*</h2>
     <div class="table-responsive">
         <table class="table table-striped">
           <thead>
@@ -29,5 +47,6 @@
             </tr>
           </tbody>
         </table>
-    </div>    
+    </div>  
+    
 </div>

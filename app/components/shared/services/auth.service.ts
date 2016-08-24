@@ -30,8 +30,8 @@ export class AuthService {
                     .catch(this.handleError);
   }
 
-  getUserPolls(): Observable<string[]> {
-    return this.http.get('/api/user/polls')
+  getUserFriends(): Observable<string[]> {
+    return this.http.get('/api/user/friends')
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
   }   

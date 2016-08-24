@@ -13,11 +13,13 @@ import { ChooseCourseDirective } from "../../shared/directives/choose-course/cho
 export class SingleRoundComponent {
   chosenCourse: object;
   courseHasBeenChosen: boolean = false;
+  showFriendsPicker: boolean = false;
   currentHoleIndex: number = -1;
   currentHole: object;
   userScoring: object;
   
   scoreOptions: array: [];
+  friends: array: [];
   
   frontNine: object;
   backNine: object;
@@ -72,6 +74,16 @@ export class SingleRoundComponent {
     //console.log("Current Hole Index: ", this.currentHoleIndex);
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
   }  
+  
+  showFriends() {
+    console.log("Show friends list to choose friend to add to scorecard");
+    this.showFriendsPicker = true;
+  }
+  
+  addFriend(index:number) {
+    let friendToAdd = this.friends[index];
+    this.showFriendsPicker = false;
+  }
   
   setHoleScore(score:number) {
       this.userScoring.holes[this.currentHoleIndex] = score;

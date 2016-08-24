@@ -15,6 +15,21 @@
     <div *ngIf="courseHasBeenChosen">
         <h2 class="course-name text-center">{{chosenCourse.name}}</h2>
         
+        <p>
+            Update users scorecard after each hole. This way we won't lose scores if they lose connectivity. This will also allow 
+            us to get friends scores during round.
+        </p>
+        
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="showFriends">Track Friends Score</button>
+        
+        <div *ngIf="showFriendsPicker" class="friends-container">
+        	<div class="list-group course-list">
+        		<div *ngFor="let friend of friends; let i = index" class="list-group-item row">
+        			<span (click)="addFriend(i)" class="poll-name">{{ friend.name }}</span>
+        		</div>
+        	</div>             
+        </div>
+        
         <table class="fake-scorecard table table-bordered">
             <tr class="header">
                 <td>&nbsp;</td>
