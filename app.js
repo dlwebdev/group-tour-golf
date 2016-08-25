@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var async = require('async');
 var moment = require('moment');
 
 var MongoStore = require('connect-mongo')(session);
@@ -79,13 +78,9 @@ app.get('/auth/twitter/callback',
     var twitterId = req.user.twitter.id;
     var currentDate = moment().format('MM-DD-YYYY');
     
-    console.log("WILL LOOK FOR ACCOUNT WITH TWITTER ID OF: ", twitterId);
-    
     Account.find({id: twitterId}, function (err, account) {
       console.log('Found account with that twitter id: ', account);
       if(err) console.log('Err: ', err);
-      
-      console.log("Working with account: ", account);
       
       if(account) {
         existingAccount = account[0]; 
@@ -98,18 +93,18 @@ app.get('/auth/twitter/callback',
       }
 
       if(hasAccount) {
-        console.log('WILL UPDATE Account by updating last login: ', existingAccount);
+        //console.log('WILL UPDATE Account by updating last login: ', existingAccount);
         
         existingAccount.lastLogin = currentDate;
       
         Account.update({id: twitterId}, existingAccount, {upsert: true}, function (err, obj) {
             if(err) console.log('Err: ', err);
-            console.log('UPDATED SUCCESSFULLY!');
+            //console.log('UPDATED SUCCESSFULLY!');
             res.redirect('/');
         });     
         
       } else { 
-        console.log('WILL CREATE NEW Account for this user.');
+        //console.log('WILL CREATE NEW Account for this user.');
       
         var account = new Account({
           id: twitterId,

@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
         this.authService.getUserAuthStatus()
             .subscribe(
                 resp => {
-                    console.log('Authentication response: ', resp);
+                    console.log('Navbar Authentication response: ', resp);
                     if((resp as any).authenticated) {
                         this.userLoggedIn = true;    
                     }

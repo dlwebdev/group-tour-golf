@@ -1,49 +1,37 @@
 <div class="container">
     <h2 class="text-center">Manage Friends</h2>
 
-    <p>Current Friends</p>
-    
-	  <div class="list-group friend-list">
-  		<div *ngFor="let friend of friends; let i = index" class="list-group-item row">
-  			<span class="account-name">{{ friend.username }}</span>
-  		</div>
-	  </div>    
-
-    <hr>
+    <!--
+    User: <pre>{{ user | json }}</pre>
+    <br><br>
+    Friends: <pre>{{ friends | json }}</pre>
+    -->
     
     <p>Add Friends</p>
     
 	  <div class="list-group account-list">
   		<div *ngFor="let account of accounts; let i = index" class="list-group-item row">
-  			<span (click)="addFriend(i)" class="account-name">{{ account.username }}</span>
+  			<span (click)="addFriend(i)" class="account-name">{{ account.username }} - Handicap: {{ account.handicap }}</span>
   		</div>
 	  </div>  
 	  
 	  <hr>
     
-    <h2 class="sub-header">Friends Recent Rounds *HARDCODED*</h2>
+    <h2 class="sub-header">Current Friends</h2>
     <div class="table-responsive">
         <table class="table table-striped">
           <thead>
             <tr>
-              <th>Score</th>
-              <th>User</th>
-              <th>Course</th>
-              <th>Date</th>
+              <th>Username</th>
+              <th>View</th>
+              <th>Remove</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>77</td>
-              <td>ECUdweber</td>
-              <td>Catawba Creek</td>
-              <td>08/17/2016</td>
-            </tr>
-            <tr>
-              <td>75</td>
-              <td>ralphdiaz</td>
-              <td>Catawba Creek</td>
-              <td>08/17/2016</td>
+            <tr *ngFor="let friend of friendsWithDetails; let i = index">
+              <td>{{ friend.username }}</td>
+              <td><span class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span></td>
+              <td><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></td>              
             </tr>
           </tbody>
         </table>

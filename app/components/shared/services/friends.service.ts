@@ -28,6 +28,12 @@ export class FriendsService {
     return this.http.get('/api/accounts/' + id)
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
+  } 
+  
+  addFriend(userId:string, friendId:string): Observable<string[]> {
+    return this.http.get('/api/accounts/' + userId + '/addFriend/' + friendId);
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
   }   
 
   /**

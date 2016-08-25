@@ -16509,7 +16509,7 @@ $__System.registerDynamic("6", ["7", "8", "9", "a", "b", "c", "d", "e", "f", "10
     path: 'dashboard',
     component: dashboard_component_1.DashboardComponent
   }, {
-    path: 'friends',
+    path: 'manage/friends',
     component: friends_component_1.FriendsComponent
   }, {
     path: 'manage/courses',
@@ -16784,7 +16784,7 @@ $__System.registerDynamic("18", ["3", "7", "17"], true, function($__require, exp
     NavbarComponent.prototype.setLoggedInStatus = function() {
       var _this = this;
       this.authService.getUserAuthStatus().subscribe(function(resp) {
-        console.log('Authentication response: ', resp);
+        console.log('Navbar Authentication response: ', resp);
         if (resp.authenticated) {
           _this.userLoggedIn = true;
         }
@@ -16882,7 +16882,7 @@ $__System.registerDynamic("b", ["3", "16", "7"], true, function($__require, expo
   return module.exports;
 });
 
-$__System.registerDynamic("c", ["3", "16", "7", "17", "19"], true, function($__require, exports, module) {
+$__System.registerDynamic("c", ["3", "16", "7", "17", "19", "1a"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -16909,35 +16909,53 @@ $__System.registerDynamic("c", ["3", "16", "7", "17", "19"], true, function($__r
   var router_1 = $__require('7');
   var auth_service_1 = $__require('17');
   var accounts_service_1 = $__require('19');
+  var friends_service_1 = $__require('1a');
   var FriendsComponent = (function() {
-    function FriendsComponent(accountsService, authService) {
+    function FriendsComponent(accountsService, friendsService, authService) {
       this.accountsService = accountsService;
+      this.friendsService = friendsService;
       this.authService = authService;
       this.user = {};
       this.friends = [];
+      this.friendsWithDetails = [];
       this.accounts = [];
       this.errorMessage = '';
     }
     FriendsComponent.prototype.ngOnInit = function() {
+      this.friends = [];
+      this.friendsWithDetails = [];
       this.checkIfLoggedIn();
     };
     FriendsComponent.prototype.checkIfLoggedIn = function() {
       var _this = this;
-      this.authService.getUserAuthStatus().subscribe(function(resp) {
-        console.log('Authentication response: ', resp);
-        if (resp.authenticated) {
+      this.authService.getCurrentUser().subscribe(function(user) {
+        console.log('Current User response: ', user);
+        _this.user = user;
+        if (_this.user.id) {
           _this.getAccounts();
           _this.getFriends();
         } else {
+          console.log("No User returned.");
           window.location.href = '/auth/twitter';
         }
       }, function(error) {
         return _this.errorMessage = error;
       });
     };
+    FriendsComponent.prototype.addFriend = function(index) {
+      var _this = this;
+      var friendToAdd = this.accounts[index];
+      console.log("Will add account as friend (just user id so we always get up to date info): ", friendToAdd);
+      this.friendsWithDetails.push(friendToAdd);
+      this.friendsService.addFriend(this.user.id, friendToAdd.id).subscribe(function(account) {
+        console.log("Friend successfully added.");
+      }, function(error) {
+        return _this.errorMessage = error;
+      });
+    };
     FriendsComponent.prototype.getAccounts = function() {
       var _this = this;
-      this.accountsService.getAccounts().subscribe(function(accounts) {
+      this.accountsService.getAccountsExcludingUser(this.user.id).subscribe(function(accounts) {
         return _this.accounts = accounts;
       }, function(error) {
         return _this.errorMessage = error;
@@ -16946,7 +16964,10 @@ $__System.registerDynamic("c", ["3", "16", "7", "17", "19"], true, function($__r
     FriendsComponent.prototype.getFriends = function() {
       var _this = this;
       this.accountsService.getUserFriends().subscribe(function(account) {
-        return _this.friends = account.friends;
+        if (account.friends) {
+          _this.friends = account.friends;
+          _this.friendsWithDetails = account.friendsWithDetails;
+        }
       }, function(error) {
         return _this.errorMessage = error;
       });
@@ -16956,7 +16977,7 @@ $__System.registerDynamic("c", ["3", "16", "7", "17", "19"], true, function($__r
       templateUrl: 'components/friends/friends.component.html',
       styleUrls: ['components/friends/friends.component.css'],
       directives: [forms_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES]
-    }), __metadata('design:paramtypes', [accounts_service_1.AccountsService, auth_service_1.AuthService])], FriendsComponent);
+    }), __metadata('design:paramtypes', [accounts_service_1.AccountsService, friends_service_1.FriendsService, auth_service_1.AuthService])], FriendsComponent);
     return FriendsComponent;
   }());
   exports.FriendsComponent = FriendsComponent;
@@ -17014,7 +17035,7 @@ var __extends = (this && this.__extends) || function(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Subject'), require('rxjs/Observable'), require('rxjs/observable/PromiseObservable'), require('rxjs/operator/toPromise')) : typeof define === 'function' && define.amd ? define("16", ["exports", "3", "1a", "1b", "1c", "1d"], factory) : (factory((global.ng = global.ng || {}, global.ng.forms = global.ng.forms || {}), global.ng.core, global.Rx, global.Rx, global.Rx, global.Rx.Observable.prototype));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Subject'), require('rxjs/Observable'), require('rxjs/observable/PromiseObservable'), require('rxjs/operator/toPromise')) : typeof define === 'function' && define.amd ? define("16", ["exports", "3", "1b", "1c", "1d", "1e"], factory) : (factory((global.ng = global.ng || {}, global.ng.forms = global.ng.forms || {}), global.ng.core, global.Rx, global.Rx, global.Rx, global.Rx.Observable.prototype));
 }(this, function(exports, _angular_core, rxjs_Subject, rxjs_Observable, rxjs_observable_PromiseObservable, rxjs_operator_toPromise) {
   'use strict';
   var NG_VALUE_ACCESSOR = new _angular_core.OpaqueToken('NgValueAccessor');
@@ -20417,7 +20438,7 @@ var __extends = (this && this.__extends) || function(d, b) {
 }));
 
 })();
-$__System.registerDynamic("1e", ["3", "1f"], true, function($__require, exports, module) {
+$__System.registerDynamic("1f", ["3", "20"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20440,7 +20461,7 @@ $__System.registerDynamic("1e", ["3", "1f"], true, function($__require, exports,
       return Reflect.metadata(k, v);
   };
   var core_1 = $__require('3');
-  var course_service_1 = $__require('1f');
+  var course_service_1 = $__require('20');
   var ChooseCourseDirective = (function() {
     function ChooseCourseDirective(courseService) {
       var _this = this;
@@ -20469,7 +20490,7 @@ $__System.registerDynamic("1e", ["3", "1f"], true, function($__require, exports,
   return module.exports;
 });
 
-$__System.registerDynamic("e", ["3", "16", "7", "1e"], true, function($__require, exports, module) {
+$__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20494,7 +20515,7 @@ $__System.registerDynamic("e", ["3", "16", "7", "1e"], true, function($__require
   var core_1 = $__require('3');
   var forms_1 = $__require('16');
   var router_1 = $__require('7');
-  var choose_course_directive_1 = $__require('1e');
+  var choose_course_directive_1 = $__require('1f');
   var SingleRoundComponent = (function() {
     function SingleRoundComponent() {
       this.courseHasBeenChosen = false;
@@ -20595,7 +20616,7 @@ $__System.registerDynamic("e", ["3", "16", "7", "1e"], true, function($__require
   return module.exports;
 });
 
-$__System.registerDynamic("f", ["3", "7", "1f"], true, function($__require, exports, module) {
+$__System.registerDynamic("f", ["3", "7", "20"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20619,7 +20640,7 @@ $__System.registerDynamic("f", ["3", "7", "1f"], true, function($__require, expo
   };
   var core_1 = $__require('3');
   var router_1 = $__require('7');
-  var course_service_1 = $__require('1f');
+  var course_service_1 = $__require('20');
   var CourseManagementComponent = (function() {
     function CourseManagementComponent(router, courseService) {
       this.router = router;
@@ -20653,7 +20674,7 @@ $__System.registerDynamic("f", ["3", "7", "1f"], true, function($__require, expo
   return module.exports;
 });
 
-$__System.registerDynamic("10", ["3", "7", "1f"], true, function($__require, exports, module) {
+$__System.registerDynamic("10", ["3", "7", "20"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20677,7 +20698,7 @@ $__System.registerDynamic("10", ["3", "7", "1f"], true, function($__require, exp
   };
   var core_1 = $__require('3');
   var router_1 = $__require('7');
-  var course_service_1 = $__require('1f');
+  var course_service_1 = $__require('20');
   var AddCourseComponent = (function() {
     function AddCourseComponent(router, courseService) {
       this.router = router;
@@ -20799,7 +20820,7 @@ $__System.registerDynamic("10", ["3", "7", "1f"], true, function($__require, exp
   return module.exports;
 });
 
-$__System.registerDynamic("20", ["21", "22"], true, function($__require, exports, module) {
+$__System.registerDynamic("21", ["22", "23"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20814,8 +20835,8 @@ $__System.registerDynamic("20", ["21", "22"], true, function($__require, exports
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var subscribeToResult_1 = $__require('21');
-  var OuterSubscriber_1 = $__require('22');
+  var subscribeToResult_1 = $__require('22');
+  var OuterSubscriber_1 = $__require('23');
   function mergeMap(project, resultSelector, concurrent) {
     if (concurrent === void 0) {
       concurrent = Number.POSITIVE_INFINITY;
@@ -20918,32 +20939,32 @@ $__System.registerDynamic("20", ["21", "22"], true, function($__require, exports
   return module.exports;
 });
 
-$__System.registerDynamic("23", ["1b", "20"], true, function($__require, exports, module) {
+$__System.registerDynamic("24", ["1c", "21"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var mergeMap_1 = $__require('20');
+  var Observable_1 = $__require('1c');
+  var mergeMap_1 = $__require('21');
   Observable_1.Observable.prototype.mergeMap = mergeMap_1.mergeMap;
   Observable_1.Observable.prototype.flatMap = mergeMap_1.mergeMap;
   return module.exports;
 });
 
-$__System.registerDynamic("24", ["1b", "25"], true, function($__require, exports, module) {
+$__System.registerDynamic("25", ["1c", "26"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var mergeAll_1 = $__require('25');
+  var Observable_1 = $__require('1c');
+  var mergeAll_1 = $__require('26');
   Observable_1.Observable.prototype.mergeAll = mergeAll_1.mergeAll;
   return module.exports;
 });
 
-$__System.registerDynamic("26", ["27"], true, function($__require, exports, module) {
+$__System.registerDynamic("27", ["28"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20958,7 +20979,7 @@ $__System.registerDynamic("26", ["27"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   function reduce(project, seed) {
     return this.lift(new ReduceOperator(project, seed));
   }
@@ -21013,19 +21034,19 @@ $__System.registerDynamic("26", ["27"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("28", ["1b", "26"], true, function($__require, exports, module) {
+$__System.registerDynamic("29", ["1c", "27"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var reduce_1 = $__require('26');
+  var Observable_1 = $__require('1c');
+  var reduce_1 = $__require('27');
   Observable_1.Observable.prototype.reduce = reduce_1.reduce;
   return module.exports;
 });
 
-$__System.registerDynamic("29", ["27"], true, function($__require, exports, module) {
+$__System.registerDynamic("2a", ["28"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21040,7 +21061,7 @@ $__System.registerDynamic("29", ["27"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   function every(predicate, thisArg) {
     var source = this;
     return source.lift(new EveryOperator(predicate, thisArg, source));
@@ -21091,19 +21112,19 @@ $__System.registerDynamic("29", ["27"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("2a", ["1b", "29"], true, function($__require, exports, module) {
+$__System.registerDynamic("2b", ["1c", "2a"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var every_1 = $__require('29');
+  var Observable_1 = $__require('1c');
+  var every_1 = $__require('2a');
   Observable_1.Observable.prototype.every = every_1.every;
   return module.exports;
 });
 
-$__System.registerDynamic("2b", ["2c", "2d", "2e", "1b", "2f", "30", "31"], true, function($__require, exports, module) {
+$__System.registerDynamic("2c", ["2d", "2e", "2f", "1c", "30", "31", "32"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21118,13 +21139,13 @@ $__System.registerDynamic("2b", ["2c", "2d", "2e", "1b", "2f", "30", "31"], true
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var root_1 = $__require('2c');
-  var isObject_1 = $__require('2d');
-  var tryCatch_1 = $__require('2e');
-  var Observable_1 = $__require('1b');
-  var isFunction_1 = $__require('2f');
-  var iterator_1 = $__require('30');
-  var errorObject_1 = $__require('31');
+  var root_1 = $__require('2d');
+  var isObject_1 = $__require('2e');
+  var tryCatch_1 = $__require('2f');
+  var Observable_1 = $__require('1c');
+  var isFunction_1 = $__require('30');
+  var iterator_1 = $__require('31');
+  var errorObject_1 = $__require('32');
   var IteratorObservable = (function(_super) {
     __extends(IteratorObservable, _super);
     function IteratorObservable(iterator, project, thisArg, scheduler) {
@@ -21320,7 +21341,7 @@ $__System.registerDynamic("2b", ["2c", "2d", "2e", "1b", "2f", "30", "31"], true
   return module.exports;
 });
 
-$__System.registerDynamic("32", ["1b", "33", "34"], true, function($__require, exports, module) {
+$__System.registerDynamic("33", ["1c", "34", "35"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21335,9 +21356,9 @@ $__System.registerDynamic("32", ["1b", "33", "34"], true, function($__require, e
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Observable_1 = $__require('1b');
-  var ScalarObservable_1 = $__require('33');
-  var EmptyObservable_1 = $__require('34');
+  var Observable_1 = $__require('1c');
+  var ScalarObservable_1 = $__require('34');
+  var EmptyObservable_1 = $__require('35');
   var ArrayLikeObservable = (function(_super) {
     __extends(ArrayLikeObservable, _super);
     function ArrayLikeObservable(arrayLike, mapFn, thisArg, scheduler) {
@@ -21409,13 +21430,13 @@ $__System.registerDynamic("32", ["1b", "33", "34"], true, function($__require, e
   return module.exports;
 });
 
-$__System.registerDynamic("35", ["1b"], true, function($__require, exports, module) {
+$__System.registerDynamic("36", ["1c"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
+  var Observable_1 = $__require('1c');
   var Notification = (function() {
     function Notification(kind, value, exception) {
       this.kind = kind;
@@ -21482,7 +21503,7 @@ $__System.registerDynamic("35", ["1b"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("36", ["27", "35"], true, function($__require, exports, module) {
+$__System.registerDynamic("37", ["28", "36"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21497,8 +21518,8 @@ $__System.registerDynamic("36", ["27", "35"], true, function($__require, exports
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
-  var Notification_1 = $__require('35');
+  var Subscriber_1 = $__require('28');
+  var Notification_1 = $__require('36');
   function observeOn(scheduler, delay) {
     if (delay === void 0) {
       delay = 0;
@@ -21561,7 +21582,7 @@ $__System.registerDynamic("36", ["27", "35"], true, function($__require, exports
   return module.exports;
 });
 
-$__System.registerDynamic("37", ["38", "2f", "39", "3a", "1c", "2b", "3b", "32", "3c", "30", "1b", "36"], true, function($__require, exports, module) {
+$__System.registerDynamic("38", ["39", "30", "3a", "3b", "1d", "2c", "3c", "33", "3d", "31", "1c", "37"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21576,18 +21597,18 @@ $__System.registerDynamic("37", ["38", "2f", "39", "3a", "1c", "2b", "3b", "32",
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var isArray_1 = $__require('38');
-  var isFunction_1 = $__require('2f');
-  var isPromise_1 = $__require('39');
-  var isScheduler_1 = $__require('3a');
-  var PromiseObservable_1 = $__require('1c');
-  var IteratorObservable_1 = $__require('2b');
-  var ArrayObservable_1 = $__require('3b');
-  var ArrayLikeObservable_1 = $__require('32');
-  var observable_1 = $__require('3c');
-  var iterator_1 = $__require('30');
-  var Observable_1 = $__require('1b');
-  var observeOn_1 = $__require('36');
+  var isArray_1 = $__require('39');
+  var isFunction_1 = $__require('30');
+  var isPromise_1 = $__require('3a');
+  var isScheduler_1 = $__require('3b');
+  var PromiseObservable_1 = $__require('1d');
+  var IteratorObservable_1 = $__require('2c');
+  var ArrayObservable_1 = $__require('3c');
+  var ArrayLikeObservable_1 = $__require('33');
+  var observable_1 = $__require('3d');
+  var iterator_1 = $__require('31');
+  var Observable_1 = $__require('1c');
+  var observeOn_1 = $__require('37');
   var isArrayLike = (function(x) {
     return x && typeof x.length === 'number';
   });
@@ -21640,18 +21661,18 @@ $__System.registerDynamic("37", ["38", "2f", "39", "3a", "1c", "2b", "3b", "32",
   return module.exports;
 });
 
-$__System.registerDynamic("3d", ["37"], true, function($__require, exports, module) {
+$__System.registerDynamic("3e", ["38"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var FromObservable_1 = $__require('37');
+  var FromObservable_1 = $__require('38');
   exports.from = FromObservable_1.FromObservable.create;
   return module.exports;
 });
 
-$__System.registerDynamic("33", ["1b"], true, function($__require, exports, module) {
+$__System.registerDynamic("34", ["1c"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21666,7 +21687,7 @@ $__System.registerDynamic("33", ["1b"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Observable_1 = $__require('1b');
+  var Observable_1 = $__require('1c');
   var ScalarObservable = (function(_super) {
     __extends(ScalarObservable, _super);
     function ScalarObservable(value, scheduler) {
@@ -21715,7 +21736,7 @@ $__System.registerDynamic("33", ["1b"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("3a", [], true, function($__require, exports, module) {
+$__System.registerDynamic("3b", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21728,7 +21749,7 @@ $__System.registerDynamic("3a", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("3b", ["1b", "33", "34", "3a"], true, function($__require, exports, module) {
+$__System.registerDynamic("3c", ["1c", "34", "35", "3b"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21743,10 +21764,10 @@ $__System.registerDynamic("3b", ["1b", "33", "34", "3a"], true, function($__requ
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Observable_1 = $__require('1b');
-  var ScalarObservable_1 = $__require('33');
-  var EmptyObservable_1 = $__require('34');
-  var isScheduler_1 = $__require('3a');
+  var Observable_1 = $__require('1c');
+  var ScalarObservable_1 = $__require('34');
+  var EmptyObservable_1 = $__require('35');
+  var isScheduler_1 = $__require('3b');
   var ArrayObservable = (function(_super) {
     __extends(ArrayObservable, _super);
     function ArrayObservable(array, scheduler) {
@@ -21822,18 +21843,18 @@ $__System.registerDynamic("3b", ["1b", "33", "34", "3a"], true, function($__requ
   return module.exports;
 });
 
-$__System.registerDynamic("3e", ["3b"], true, function($__require, exports, module) {
+$__System.registerDynamic("3f", ["3c"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var ArrayObservable_1 = $__require('3b');
+  var ArrayObservable_1 = $__require('3c');
   exports.of = ArrayObservable_1.ArrayObservable.of;
   return module.exports;
 });
 
-$__System.registerDynamic("3f", ["27", "40"], true, function($__require, exports, module) {
+$__System.registerDynamic("40", ["28", "41"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21848,8 +21869,8 @@ $__System.registerDynamic("3f", ["27", "40"], true, function($__require, exports
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
-  var EmptyError_1 = $__require('40');
+  var Subscriber_1 = $__require('28');
+  var EmptyError_1 = $__require('41');
   function first(predicate, resultSelector, defaultValue) {
     return this.lift(new FirstOperator(predicate, resultSelector, defaultValue, this));
   }
@@ -21934,19 +21955,19 @@ $__System.registerDynamic("3f", ["27", "40"], true, function($__require, exports
   return module.exports;
 });
 
-$__System.registerDynamic("41", ["1b", "3f"], true, function($__require, exports, module) {
+$__System.registerDynamic("42", ["1c", "40"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var first_1 = $__require('3f');
+  var Observable_1 = $__require('1c');
+  var first_1 = $__require('40');
   Observable_1.Observable.prototype.first = first_1.first;
   return module.exports;
 });
 
-$__System.registerDynamic("25", ["22", "21"], true, function($__require, exports, module) {
+$__System.registerDynamic("26", ["23", "22"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -21961,8 +21982,8 @@ $__System.registerDynamic("25", ["22", "21"], true, function($__require, exports
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var OuterSubscriber_1 = $__require('22');
-  var subscribeToResult_1 = $__require('21');
+  var OuterSubscriber_1 = $__require('23');
+  var subscribeToResult_1 = $__require('22');
   function mergeAll(concurrent) {
     if (concurrent === void 0) {
       concurrent = Number.POSITIVE_INFINITY;
@@ -22019,13 +22040,13 @@ $__System.registerDynamic("25", ["22", "21"], true, function($__require, exports
   return module.exports;
 });
 
-$__System.registerDynamic("42", ["25"], true, function($__require, exports, module) {
+$__System.registerDynamic("43", ["26"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var mergeAll_1 = $__require('25');
+  var mergeAll_1 = $__require('26');
   function concatAll() {
     return this.lift(new mergeAll_1.MergeAllOperator(1));
   }
@@ -22033,30 +22054,30 @@ $__System.registerDynamic("42", ["25"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("43", ["1b", "42"], true, function($__require, exports, module) {
+$__System.registerDynamic("44", ["1c", "43"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var concatAll_1 = $__require('42');
+  var Observable_1 = $__require('1c');
+  var concatAll_1 = $__require('43');
   Observable_1.Observable.prototype.concatAll = concatAll_1.concatAll;
   return module.exports;
 });
 
-$__System.registerDynamic("44", ["1c"], true, function($__require, exports, module) {
+$__System.registerDynamic("45", ["1d"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var PromiseObservable_1 = $__require('1c');
+  var PromiseObservable_1 = $__require('1d');
   exports.fromPromise = PromiseObservable_1.PromiseObservable.create;
   return module.exports;
 });
 
-$__System.registerDynamic("40", [], true, function($__require, exports, module) {
+$__System.registerDynamic("41", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22083,7 +22104,7 @@ $__System.registerDynamic("40", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("45", ["27", "40"], true, function($__require, exports, module) {
+$__System.registerDynamic("46", ["28", "41"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22098,8 +22119,8 @@ $__System.registerDynamic("45", ["27", "40"], true, function($__require, exports
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
-  var EmptyError_1 = $__require('40');
+  var Subscriber_1 = $__require('28');
+  var EmptyError_1 = $__require('41');
   function last(predicate, resultSelector, defaultValue) {
     return this.lift(new LastOperator(predicate, resultSelector, defaultValue, this));
   }
@@ -22186,19 +22207,19 @@ $__System.registerDynamic("45", ["27", "40"], true, function($__require, exports
   return module.exports;
 });
 
-$__System.registerDynamic("46", ["1b", "45"], true, function($__require, exports, module) {
+$__System.registerDynamic("47", ["1c", "46"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var last_1 = $__require('45');
+  var Observable_1 = $__require('1c');
+  var last_1 = $__require('46');
   Observable_1.Observable.prototype.last = last_1.last;
   return module.exports;
 });
 
-$__System.registerDynamic("47", ["1a", "48", "49"], true, function($__require, exports, module) {
+$__System.registerDynamic("48", ["1b", "49", "4a"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22213,9 +22234,9 @@ $__System.registerDynamic("47", ["1a", "48", "49"], true, function($__require, e
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subject_1 = $__require('1a');
-  var throwError_1 = $__require('48');
-  var ObjectUnsubscribedError_1 = $__require('49');
+  var Subject_1 = $__require('1b');
+  var throwError_1 = $__require('49');
+  var ObjectUnsubscribedError_1 = $__require('4a');
   var BehaviorSubject = (function(_super) {
     __extends(BehaviorSubject, _super);
     function BehaviorSubject(_value) {
@@ -22258,7 +22279,7 @@ $__System.registerDynamic("47", ["1a", "48", "49"], true, function($__require, e
   return module.exports;
 });
 
-$__System.registerDynamic("34", ["1b"], true, function($__require, exports, module) {
+$__System.registerDynamic("35", ["1c"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22273,7 +22294,7 @@ $__System.registerDynamic("34", ["1b"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Observable_1 = $__require('1b');
+  var Observable_1 = $__require('1c');
   var EmptyObservable = (function(_super) {
     __extends(EmptyObservable, _super);
     function EmptyObservable(scheduler) {
@@ -22301,7 +22322,7 @@ $__System.registerDynamic("34", ["1b"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("39", [], true, function($__require, exports, module) {
+$__System.registerDynamic("3a", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22314,13 +22335,13 @@ $__System.registerDynamic("39", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("30", ["2c"], true, function($__require, exports, module) {
+$__System.registerDynamic("31", ["2d"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var root_1 = $__require('2c');
+  var root_1 = $__require('2d');
   var Symbol = root_1.root.Symbol;
   if (typeof Symbol === 'function') {
     if (Symbol.iterator) {
@@ -22347,7 +22368,7 @@ $__System.registerDynamic("30", ["2c"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("4a", ["27"], true, function($__require, exports, module) {
+$__System.registerDynamic("4b", ["28"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22362,7 +22383,7 @@ $__System.registerDynamic("4a", ["27"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   var InnerSubscriber = (function(_super) {
     __extends(InnerSubscriber, _super);
     function InnerSubscriber(parent, outerValue, outerIndex) {
@@ -22389,19 +22410,19 @@ $__System.registerDynamic("4a", ["27"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("21", ["2c", "38", "39", "1b", "30", "3c", "4a"], true, function($__require, exports, module) {
+$__System.registerDynamic("22", ["2d", "39", "3a", "1c", "31", "3d", "4b"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var root_1 = $__require('2c');
-  var isArray_1 = $__require('38');
-  var isPromise_1 = $__require('39');
-  var Observable_1 = $__require('1b');
-  var iterator_1 = $__require('30');
-  var observable_1 = $__require('3c');
-  var InnerSubscriber_1 = $__require('4a');
+  var root_1 = $__require('2d');
+  var isArray_1 = $__require('39');
+  var isPromise_1 = $__require('3a');
+  var Observable_1 = $__require('1c');
+  var iterator_1 = $__require('31');
+  var observable_1 = $__require('3d');
+  var InnerSubscriber_1 = $__require('4b');
   function subscribeToResult(outerSubscriber, result, outerValue, outerIndex) {
     var destination = new InnerSubscriber_1.InnerSubscriber(outerSubscriber, outerValue, outerIndex);
     if (destination.isUnsubscribed) {
@@ -22465,7 +22486,7 @@ $__System.registerDynamic("21", ["2c", "38", "39", "1b", "30", "3c", "4a"], true
   return module.exports;
 });
 
-$__System.registerDynamic("22", ["27"], true, function($__require, exports, module) {
+$__System.registerDynamic("23", ["28"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22480,7 +22501,7 @@ $__System.registerDynamic("22", ["27"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   var OuterSubscriber = (function(_super) {
     __extends(OuterSubscriber, _super);
     function OuterSubscriber() {
@@ -22501,7 +22522,7 @@ $__System.registerDynamic("22", ["27"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("4b", ["1b", "34", "38", "21", "22"], true, function($__require, exports, module) {
+$__System.registerDynamic("4c", ["1c", "35", "39", "22", "23"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -22516,11 +22537,11 @@ $__System.registerDynamic("4b", ["1b", "34", "38", "21", "22"], true, function($
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Observable_1 = $__require('1b');
-  var EmptyObservable_1 = $__require('34');
-  var isArray_1 = $__require('38');
-  var subscribeToResult_1 = $__require('21');
-  var OuterSubscriber_1 = $__require('22');
+  var Observable_1 = $__require('1c');
+  var EmptyObservable_1 = $__require('35');
+  var isArray_1 = $__require('39');
+  var subscribeToResult_1 = $__require('22');
+  var OuterSubscriber_1 = $__require('23');
   var ForkJoinObservable = (function(_super) {
     __extends(ForkJoinObservable, _super);
     function ForkJoinObservable(sources, resultSelector) {
@@ -22607,13 +22628,13 @@ $__System.registerDynamic("4b", ["1b", "34", "38", "21", "22"], true, function($
   return module.exports;
 });
 
-$__System.registerDynamic("4c", ["4b"], true, function($__require, exports, module) {
+$__System.registerDynamic("4d", ["4c"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var ForkJoinObservable_1 = $__require('4b');
+  var ForkJoinObservable_1 = $__require('4c');
   exports.forkJoin = ForkJoinObservable_1.ForkJoinObservable.create;
   return module.exports;
 });
@@ -22630,7 +22651,7 @@ var __extends = (this && this.__extends) || function(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/common'), require('@angular/core'), require('rxjs/add/operator/map'), require('rxjs/add/operator/mergeMap'), require('rxjs/add/operator/mergeAll'), require('rxjs/add/operator/reduce'), require('rxjs/add/operator/every'), require('rxjs/Subject'), require('rxjs/observable/from'), require('rxjs/observable/of'), require('rxjs/add/operator/first'), require('rxjs/add/operator/catch'), require('rxjs/add/operator/concatAll'), require('rxjs/Observable'), require('rxjs/util/EmptyError'), require('rxjs/observable/fromPromise'), require('rxjs/add/operator/last'), require('rxjs/BehaviorSubject'), require('rxjs/add/operator/toPromise'), require('rxjs/observable/forkJoin'), require('@angular/platform-browser')) : typeof define === 'function' && define.amd ? define("7", ["exports", "4d", "3", "4e", "23", "24", "28", "2a", "1a", "3d", "3e", "41", "4f", "43", "1b", "40", "44", "46", "47", "50", "4c", "5"], factory) : (factory((global.ng = global.ng || {}, global.ng.router = global.ng.router || {}), global.ng.common, global.ng.core, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx, global.Rx.Observable, global.Rx.Observable, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx, global.Rx.EmptyError, global.Rx.Observable, global.Rx.Observable.prototype, global.Rx, global.Rx.Observable.prototype, global.Rx.Observable, global.ng.platformBrowser));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/common'), require('@angular/core'), require('rxjs/add/operator/map'), require('rxjs/add/operator/mergeMap'), require('rxjs/add/operator/mergeAll'), require('rxjs/add/operator/reduce'), require('rxjs/add/operator/every'), require('rxjs/Subject'), require('rxjs/observable/from'), require('rxjs/observable/of'), require('rxjs/add/operator/first'), require('rxjs/add/operator/catch'), require('rxjs/add/operator/concatAll'), require('rxjs/Observable'), require('rxjs/util/EmptyError'), require('rxjs/observable/fromPromise'), require('rxjs/add/operator/last'), require('rxjs/BehaviorSubject'), require('rxjs/add/operator/toPromise'), require('rxjs/observable/forkJoin'), require('@angular/platform-browser')) : typeof define === 'function' && define.amd ? define("7", ["exports", "4e", "3", "4f", "24", "25", "29", "2b", "1b", "3e", "3f", "42", "50", "44", "1c", "41", "45", "47", "48", "51", "4d", "5"], factory) : (factory((global.ng = global.ng || {}, global.ng.router = global.ng.router || {}), global.ng.common, global.ng.core, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx, global.Rx.Observable, global.Rx.Observable, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx.Observable.prototype, global.Rx, global.Rx.EmptyError, global.Rx.Observable, global.Rx.Observable.prototype, global.Rx, global.Rx.Observable.prototype, global.Rx.Observable, global.ng.platformBrowser));
 }(this, function(exports, _angular_common, _angular_core, rxjs_add_operator_map, rxjs_add_operator_mergeMap, rxjs_add_operator_mergeAll, rxjs_add_operator_reduce, rxjs_add_operator_every, rxjs_Subject, rxjs_observable_from, rxjs_observable_of, rxjs_add_operator_first, rxjs_add_operator_catch, rxjs_add_operator_concatAll, rxjs_Observable, rxjs_util_EmptyError, rxjs_observable_fromPromise, rxjs_add_operator_last, rxjs_BehaviorSubject, rxjs_add_operator_toPromise, rxjs_observable_forkJoin, _angular_platformBrowser) {
   'use strict';
   var PRIMARY_OUTLET = 'primary';
@@ -25518,7 +25539,7 @@ var __extends = (this && this.__extends) || function(d, b) {
 }));
 
 })();
-$__System.registerDynamic("11", ["3", "7", "1f"], true, function($__require, exports, module) {
+$__System.registerDynamic("11", ["3", "7", "20"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -25542,7 +25563,7 @@ $__System.registerDynamic("11", ["3", "7", "1f"], true, function($__require, exp
   };
   var core_1 = $__require('3');
   var router_1 = $__require('7');
-  var course_service_1 = $__require('1f');
+  var course_service_1 = $__require('20');
   var EditCourseComponent = (function() {
     function EditCourseComponent(router, route, courseService) {
       this.router = router;
@@ -25592,7 +25613,7 @@ $__System.registerDynamic("11", ["3", "7", "1f"], true, function($__require, exp
   return module.exports;
 });
 
-$__System.registerDynamic("17", ["3", "51", "1b", "4e", "4f", "50"], true, function($__require, exports, module) {
+$__System.registerDynamic("17", ["3", "52", "1c", "4f", "50", "51"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -25615,11 +25636,11 @@ $__System.registerDynamic("17", ["3", "51", "1b", "4e", "4f", "50"], true, funct
       return Reflect.metadata(k, v);
   };
   var core_1 = $__require('3');
-  var http_1 = $__require('51');
-  var Observable_1 = $__require('1b');
-  $__require('4e');
+  var http_1 = $__require('52');
+  var Observable_1 = $__require('1c');
   $__require('4f');
   $__require('50');
+  $__require('51');
   var AuthService = (function() {
     function AuthService(http) {
       this.http = http;
@@ -25674,7 +25695,7 @@ $__System.registerDynamic("17", ["3", "51", "1b", "4e", "4f", "50"], true, funct
   return module.exports;
 });
 
-$__System.registerDynamic("1f", ["3", "51", "1b", "4e", "4f", "50"], true, function($__require, exports, module) {
+$__System.registerDynamic("20", ["3", "52", "1c", "4f", "50", "51"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -25697,11 +25718,11 @@ $__System.registerDynamic("1f", ["3", "51", "1b", "4e", "4f", "50"], true, funct
       return Reflect.metadata(k, v);
   };
   var core_1 = $__require('3');
-  var http_1 = $__require('51');
-  var Observable_1 = $__require('1b');
-  $__require('4e');
+  var http_1 = $__require('52');
+  var Observable_1 = $__require('1c');
   $__require('4f');
   $__require('50');
+  $__require('51');
   var CourseService = (function() {
     function CourseService(http) {
       this.http = http;
@@ -25740,7 +25761,7 @@ $__System.registerDynamic("1f", ["3", "51", "1b", "4e", "4f", "50"], true, funct
   return module.exports;
 });
 
-$__System.registerDynamic("52", ["3", "51", "1b", "4e", "4f", "50"], true, function($__require, exports, module) {
+$__System.registerDynamic("1a", ["3", "52", "1c", "4f", "50", "51"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -25763,11 +25784,11 @@ $__System.registerDynamic("52", ["3", "51", "1b", "4e", "4f", "50"], true, funct
       return Reflect.metadata(k, v);
   };
   var core_1 = $__require('3');
-  var http_1 = $__require('51');
-  var Observable_1 = $__require('1b');
-  $__require('4e');
+  var http_1 = $__require('52');
+  var Observable_1 = $__require('1c');
   $__require('4f');
   $__require('50');
+  $__require('51');
   var FriendsService = (function() {
     function FriendsService(http) {
       this.http = http;
@@ -25779,6 +25800,12 @@ $__System.registerDynamic("52", ["3", "51", "1b", "4e", "4f", "50"], true, funct
     };
     FriendsService.prototype.getFriendInfo = function(id) {
       return this.http.get('/api/accounts/' + id).map(function(res) {
+        return res.json();
+      }).catch(this.handleError);
+    };
+    FriendsService.prototype.addFriend = function(userId, friendId) {
+      return this.http.get('/api/accounts/' + userId + '/addFriend/' + friendId);
+      map(function(res) {
         return res.json();
       }).catch(this.handleError);
     };
@@ -25794,7 +25821,7 @@ $__System.registerDynamic("52", ["3", "51", "1b", "4e", "4f", "50"], true, funct
   return module.exports;
 });
 
-$__System.registerDynamic("1c", ["2c", "1b"], true, function($__require, exports, module) {
+$__System.registerDynamic("1d", ["2d", "1c"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -25809,8 +25836,8 @@ $__System.registerDynamic("1c", ["2c", "1b"], true, function($__require, exports
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var root_1 = $__require('2c');
-  var Observable_1 = $__require('1b');
+  var root_1 = $__require('2d');
+  var Observable_1 = $__require('1c');
   var PromiseObservable = (function(_super) {
     __extends(PromiseObservable, _super);
     function PromiseObservable(promise, scheduler) {
@@ -25921,7 +25948,7 @@ var __extends = (this && this.__extends) || function(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/operator/toPromise'), require('rxjs/Subject'), require('rxjs/Observable'), require('rxjs/observable/PromiseObservable')) : typeof define === 'function' && define.amd ? define("4d", ["exports", "3", "1d", "1a", "1b", "1c"], factory) : (factory((global.ng = global.ng || {}, global.ng.common = global.ng.common || {}), global.ng.core, global.Rx.Observable.prototype, global.Rx, global.Rx, global.Rx));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/operator/toPromise'), require('rxjs/Subject'), require('rxjs/Observable'), require('rxjs/observable/PromiseObservable')) : typeof define === 'function' && define.amd ? define("4e", ["exports", "3", "1e", "1b", "1c", "1d"], factory) : (factory((global.ng = global.ng || {}, global.ng.common = global.ng.common || {}), global.ng.core, global.Rx.Observable.prototype, global.Rx, global.Rx, global.Rx));
 }(this, function(exports, _angular_core, rxjs_operator_toPromise, rxjs_Subject, rxjs_Observable, rxjs_observable_PromiseObservable) {
   'use strict';
   var globalScope;
@@ -30311,7 +30338,7 @@ var __extends = (this && this.__extends) || function(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Subject'), require('rxjs/Observable')) : typeof define === 'function' && define.amd ? define("3", ["exports", "1a", "1b"], factory) : (factory((global.ng = global.ng || {}, global.ng.core = global.ng.core || {}), global.Rx, global.Rx));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs/Subject'), require('rxjs/Observable')) : typeof define === 'function' && define.amd ? define("3", ["exports", "1b", "1c"], factory) : (factory((global.ng = global.ng || {}, global.ng.core = global.ng.core || {}), global.Rx, global.Rx));
 }(this, function(exports, rxjs_Subject, rxjs_Observable) {
   'use strict';
   var globalScope;
@@ -38289,7 +38316,7 @@ $__System.registerDynamic("53", ["54"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("48", [], true, function($__require, exports, module) {
+$__System.registerDynamic("49", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -38302,7 +38329,7 @@ $__System.registerDynamic("48", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("49", [], true, function($__require, exports, module) {
+$__System.registerDynamic("4a", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -38329,7 +38356,7 @@ $__System.registerDynamic("49", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("1a", ["1b", "27", "54", "53", "55", "48", "49"], true, function($__require, exports, module) {
+$__System.registerDynamic("1b", ["1c", "28", "54", "53", "55", "49", "4a"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -38344,13 +38371,13 @@ $__System.registerDynamic("1a", ["1b", "27", "54", "53", "55", "48", "49"], true
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Observable_1 = $__require('1b');
-  var Subscriber_1 = $__require('27');
+  var Observable_1 = $__require('1c');
+  var Subscriber_1 = $__require('28');
   var Subscription_1 = $__require('54');
   var SubjectSubscription_1 = $__require('53');
   var rxSubscriber_1 = $__require('55');
-  var throwError_1 = $__require('48');
-  var ObjectUnsubscribedError_1 = $__require('49');
+  var throwError_1 = $__require('49');
+  var ObjectUnsubscribedError_1 = $__require('4a');
   var Subject = (function(_super) {
     __extends(Subject, _super);
     function Subject(destination, source) {
@@ -38539,7 +38566,7 @@ var __extends = (this && this.__extends) || function(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/common'), require('@angular/core'), require('rxjs/Subject'), require('rxjs/Observable')) : typeof define === 'function' && define.amd ? define("5", ["exports", "4d", "3", "1a", "1b"], factory) : (factory((global.ng = global.ng || {}, global.ng.platformBrowser = global.ng.platformBrowser || {}), global.ng.common, global.ng.core, global.Rx, global.Rx));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/common'), require('@angular/core'), require('rxjs/Subject'), require('rxjs/Observable')) : typeof define === 'function' && define.amd ? define("5", ["exports", "4e", "3", "1b", "1c"], factory) : (factory((global.ng = global.ng || {}, global.ng.platformBrowser = global.ng.platformBrowser || {}), global.ng.common, global.ng.core, global.Rx, global.Rx));
 }(this, function(exports, _angular_common, _angular_core, rxjs_Subject, rxjs_Observable) {
   'use strict';
   var wtfInit = _angular_core.__core_private__.wtfInit;
@@ -43191,7 +43218,7 @@ var __extends = (this && this.__extends) || function(d, b) {
   d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 (function(global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Observable'), require('@angular/platform-browser')) : typeof define === 'function' && define.amd ? define("51", ["exports", "3", "1b", "5"], factory) : (factory((global.ng = global.ng || {}, global.ng.http = global.ng.http || {}), global.ng.core, global.Rx, global.ng.platformBrowser));
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('rxjs/Observable'), require('@angular/platform-browser')) : typeof define === 'function' && define.amd ? define("52", ["exports", "3", "1c", "5"], factory) : (factory((global.ng = global.ng || {}, global.ng.http = global.ng.http || {}), global.ng.core, global.Rx, global.ng.platformBrowser));
 }(this, function(exports, _angular_core, rxjs_Observable, _angular_platformBrowser) {
   'use strict';
   var globalScope;
@@ -44719,7 +44746,7 @@ var __extends = (this && this.__extends) || function(d, b) {
 }));
 
 })();
-$__System.registerDynamic("56", ["27"], true, function($__require, exports, module) {
+$__System.registerDynamic("56", ["28"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -44734,7 +44761,7 @@ $__System.registerDynamic("56", ["27"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   function map(project, thisArg) {
     if (typeof project !== 'function') {
       throw new TypeError('argument is not a function. Are you looking for `mapTo()`?');
@@ -44775,19 +44802,19 @@ $__System.registerDynamic("56", ["27"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("4e", ["1b", "56"], true, function($__require, exports, module) {
+$__System.registerDynamic("4f", ["1c", "56"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
+  var Observable_1 = $__require('1c');
   var map_1 = $__require('56');
   Observable_1.Observable.prototype.map = map_1.map;
   return module.exports;
 });
 
-$__System.registerDynamic("57", ["27"], true, function($__require, exports, module) {
+$__System.registerDynamic("57", ["28"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -44802,7 +44829,7 @@ $__System.registerDynamic("57", ["27"], true, function($__require, exports, modu
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   function _catch(selector) {
     var operator = new CatchOperator(selector);
     var caught = this.lift(operator);
@@ -44847,25 +44874,25 @@ $__System.registerDynamic("57", ["27"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("4f", ["1b", "57"], true, function($__require, exports, module) {
+$__System.registerDynamic("50", ["1c", "57"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
+  var Observable_1 = $__require('1c');
   var catch_1 = $__require('57');
   Observable_1.Observable.prototype.catch = catch_1._catch;
   return module.exports;
 });
 
-$__System.registerDynamic("3c", ["2c"], true, function($__require, exports, module) {
+$__System.registerDynamic("3d", ["2d"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var root_1 = $__require('2c');
+  var root_1 = $__require('2d');
   var Symbol = root_1.root.Symbol;
   if (typeof Symbol === 'function') {
     if (Symbol.observable) {
@@ -44884,7 +44911,7 @@ $__System.registerDynamic("3c", ["2c"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("38", [], true, function($__require, exports, module) {
+$__System.registerDynamic("39", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -44896,7 +44923,7 @@ $__System.registerDynamic("38", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("2d", [], true, function($__require, exports, module) {
+$__System.registerDynamic("2e", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -44909,7 +44936,7 @@ $__System.registerDynamic("2d", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("2f", [], true, function($__require, exports, module) {
+$__System.registerDynamic("30", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -44922,13 +44949,13 @@ $__System.registerDynamic("2f", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("2e", ["31"], true, function($__require, exports, module) {
+$__System.registerDynamic("2f", ["32"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var errorObject_1 = $__require('31');
+  var errorObject_1 = $__require('32');
   var tryCatchTarget;
   function tryCatcher() {
     try {
@@ -44947,7 +44974,7 @@ $__System.registerDynamic("2e", ["31"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("31", [], true, function($__require, exports, module) {
+$__System.registerDynamic("32", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -44988,17 +45015,17 @@ $__System.registerDynamic("58", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("54", ["38", "2d", "2f", "2e", "31", "58"], true, function($__require, exports, module) {
+$__System.registerDynamic("54", ["39", "2e", "30", "2f", "32", "58"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var isArray_1 = $__require('38');
-  var isObject_1 = $__require('2d');
-  var isFunction_1 = $__require('2f');
-  var tryCatch_1 = $__require('2e');
-  var errorObject_1 = $__require('31');
+  var isArray_1 = $__require('39');
+  var isObject_1 = $__require('2e');
+  var isFunction_1 = $__require('30');
+  var tryCatch_1 = $__require('2f');
+  var errorObject_1 = $__require('32');
   var UnsubscriptionError_1 = $__require('58');
   var Subscription = (function() {
     function Subscription(unsubscribe) {
@@ -45110,7 +45137,7 @@ $__System.registerDynamic("59", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("27", ["2f", "54", "55", "59"], true, function($__require, exports, module) {
+$__System.registerDynamic("28", ["30", "54", "55", "59"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -45125,7 +45152,7 @@ $__System.registerDynamic("27", ["2f", "54", "55", "59"], true, function($__requ
     }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   };
-  var isFunction_1 = $__require('2f');
+  var isFunction_1 = $__require('30');
   var Subscription_1 = $__require('54');
   var rxSubscriber_1 = $__require('55');
   var Observer_1 = $__require('59');
@@ -45308,25 +45335,25 @@ $__System.registerDynamic("27", ["2f", "54", "55", "59"], true, function($__requ
   return module.exports;
 });
 
-$__System.registerDynamic("55", ["2c"], true, function($__require, exports, module) {
+$__System.registerDynamic("55", ["2d"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var root_1 = $__require('2c');
+  var root_1 = $__require('2d');
   var Symbol = root_1.root.Symbol;
   exports.$$rxSubscriber = (typeof Symbol === 'function' && typeof Symbol.for === 'function') ? Symbol.for('rxSubscriber') : '@@rxSubscriber';
   return module.exports;
 });
 
-$__System.registerDynamic("5a", ["27", "55"], true, function($__require, exports, module) {
+$__System.registerDynamic("5a", ["28", "55"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Subscriber_1 = $__require('27');
+  var Subscriber_1 = $__require('28');
   var rxSubscriber_1 = $__require('55');
   function toSubscriber(nextOrObserver, error, complete) {
     if (nextOrObserver && typeof nextOrObserver === 'object') {
@@ -45342,14 +45369,14 @@ $__System.registerDynamic("5a", ["27", "55"], true, function($__require, exports
   return module.exports;
 });
 
-$__System.registerDynamic("1b", ["2c", "3c", "5a"], true, function($__require, exports, module) {
+$__System.registerDynamic("1c", ["2d", "3d", "5a"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var root_1 = $__require('2c');
-  var observable_1 = $__require('3c');
+  var root_1 = $__require('2d');
+  var observable_1 = $__require('3d');
   var toSubscriber_1 = $__require('5a');
   var Observable = (function() {
     function Observable(subscribe) {
@@ -45418,7 +45445,7 @@ $__System.registerDynamic("1b", ["2c", "3c", "5a"], true, function($__require, e
   return module.exports;
 });
 
-$__System.registerDynamic("2c", [], true, function($__require, exports, module) {
+$__System.registerDynamic("2d", [], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -45442,13 +45469,13 @@ $__System.registerDynamic("2c", [], true, function($__require, exports, module) 
   return module.exports;
 });
 
-$__System.registerDynamic("1d", ["2c"], true, function($__require, exports, module) {
+$__System.registerDynamic("1e", ["2d"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var root_1 = $__require('2c');
+  var root_1 = $__require('2d');
   function toPromise(PromiseCtor) {
     var _this = this;
     if (!PromiseCtor) {
@@ -45476,19 +45503,19 @@ $__System.registerDynamic("1d", ["2c"], true, function($__require, exports, modu
   return module.exports;
 });
 
-$__System.registerDynamic("50", ["1b", "1d"], true, function($__require, exports, module) {
+$__System.registerDynamic("51", ["1c", "1e"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
       global = this || self,
       GLOBAL = global;
-  var Observable_1 = $__require('1b');
-  var toPromise_1 = $__require('1d');
+  var Observable_1 = $__require('1c');
+  var toPromise_1 = $__require('1e');
   Observable_1.Observable.prototype.toPromise = toPromise_1.toPromise;
   return module.exports;
 });
 
-$__System.registerDynamic("19", ["3", "51", "1b", "4e", "4f", "50"], true, function($__require, exports, module) {
+$__System.registerDynamic("19", ["3", "52", "1c", "4f", "50", "51"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -45511,11 +45538,11 @@ $__System.registerDynamic("19", ["3", "51", "1b", "4e", "4f", "50"], true, funct
       return Reflect.metadata(k, v);
   };
   var core_1 = $__require('3');
-  var http_1 = $__require('51');
-  var Observable_1 = $__require('1b');
-  $__require('4e');
+  var http_1 = $__require('52');
+  var Observable_1 = $__require('1c');
   $__require('4f');
   $__require('50');
+  $__require('51');
   var AccountsService = (function() {
     function AccountsService(http) {
       this.http = http;
@@ -45525,8 +45552,13 @@ $__System.registerDynamic("19", ["3", "51", "1b", "4e", "4f", "50"], true, funct
         return res.json();
       }).catch(this.handleError);
     };
-    AccountsService.prototype.getAccounts = function() {
+    AccountsService.prototype.getAllAccounts = function() {
       return this.http.get('/api/accounts/').map(function(res) {
+        return res.json();
+      }).catch(this.handleError);
+    };
+    AccountsService.prototype.getAccountsExcludingUser = function(id) {
+      return this.http.get('/api/accounts/exclude/' + id).map(function(res) {
         return res.json();
       }).catch(this.handleError);
     };
@@ -45547,7 +45579,7 @@ $__System.registerDynamic("19", ["3", "51", "1b", "4e", "4f", "50"], true, funct
   return module.exports;
 });
 
-$__System.registerDynamic("5b", ["3", "5", "51", "6", "12", "9", "8", "18", "a", "b", "c", "d", "e", "f", "10", "11", "17", "1f", "52", "19"], true, function($__require, exports, module) {
+$__System.registerDynamic("5b", ["3", "5", "52", "6", "12", "9", "8", "18", "a", "b", "c", "d", "e", "f", "10", "11", "17", "20", "1a", "19"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -45571,7 +45603,7 @@ $__System.registerDynamic("5b", ["3", "5", "51", "6", "12", "9", "8", "18", "a",
   };
   var core_1 = $__require('3');
   var platform_browser_1 = $__require('5');
-  var http_1 = $__require('51');
+  var http_1 = $__require('52');
   var routes_1 = $__require('6');
   var app_component_1 = $__require('12');
   var about_component_1 = $__require('9');
@@ -45586,8 +45618,8 @@ $__System.registerDynamic("5b", ["3", "5", "51", "6", "12", "9", "8", "18", "a",
   var add_course_component_1 = $__require('10');
   var edit_course_component_1 = $__require('11');
   var auth_service_1 = $__require('17');
-  var course_service_1 = $__require('1f');
-  var friends_service_1 = $__require('52');
+  var course_service_1 = $__require('20');
+  var friends_service_1 = $__require('1a');
   var accounts_service_1 = $__require('19');
   var AppModule = (function() {
     function AppModule() {}

@@ -23,9 +23,15 @@ export class AccountsService {
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
   }   
-  
-  getAccounts(): Observable<Object[]> {
+ 
+  getAllAccounts(): Observable<Object[]> {
     return this.http.get('/api/accounts/')
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  } 
+  
+  getAccountsExcludingUser(id:string): Observable<Object[]> {
+    return this.http.get('/api/accounts/exclude/' + id)
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
   }

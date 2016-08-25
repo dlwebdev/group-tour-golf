@@ -22,7 +22,7 @@ export const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent },
-    { path: 'friends', component: FriendsComponent },
+    { path: 'manage/friends', component: FriendsComponent },
     // Manage courses
     { path: 'manage/courses', component: CourseManagementComponent },
     { path: 'manage/courses/add', component: AddCourseComponent },

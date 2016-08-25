@@ -4,6 +4,7 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { AuthService } from "../shared/services/auth.service";
 import { AccountsService } from "../shared/services/accounts.service";
+import { FriendsService } from "../shared/services/friends.service";
 
 @Component({
     selector: 'my-friends',
@@ -13,35 +14,57 @@ import { AccountsService } from "../shared/services/accounts.service";
 })
 export class FriendsComponent {
     user: any = {};
-    friends: array = [];
+    friends: any = [];
+    friendsWithDetails: any = [];
     accounts: array = [];
     errorMessage: string = '';
 
-    constructor(private accountsService: AccountsService, private authService: AuthService) {}    
+    constructor(private accountsService: AccountsService, private friendsService:FriendsService, private authService: AuthService) { }    
     
     ngOnInit() {
+      this.friends = [];
+      this.friendsWithDetails = [];
       this.checkIfLoggedIn();
     } 
     
     checkIfLoggedIn() {
-      this.authService.getUserAuthStatus()
+      // If the user is logged in it will return the user object, otherwise will redirect to login
+      this.authService.getCurrentUser()
             .subscribe(
-                resp => {
-                    console.log('Authentication response: ', resp);
-                    if((resp as any).authenticated) {
-                        this.getAccounts();
-                        this.getFriends();
+                user => {
+                    console.log('Current User response: ', user);
+                    this.user = user;
+                    
+                    if(this.user.id) {
+                      this.getAccounts();
+                      this.getFriends();                      
                     }
                     else {
-                        window.location.href = '/auth/twitter';
+                      console.log("No User returned.");
+                      window.location.href = '/auth/twitter';
                     }
                 },
                 error =>  this.errorMessage = <any>error
             );      
     }
     
+    addFriend(index:number) {
+      let friendToAdd = this.accounts[index];
+      console.log("Will add account as friend (just user id so we always get up to date info): ", friendToAdd);
+      this.friendsWithDetails.push(friendToAdd);
+      
+      this.friendsService.addFriend(this.user.id, friendToAdd.id)
+        .subscribe(
+          account => {
+            //this.friends.push(friendToAdd);
+            console.log("Friend successfully added.");
+          },
+          error =>  this.errorMessage = <any>error
+        );      
+    }
+    
     getAccounts() {
-      this.accountsService.getAccounts()
+      this.accountsService.getAccountsExcludingUser(this.user.id)
         .subscribe(
           accounts => this.accounts = accounts,
           error =>  this.errorMessage = <any>error
@@ -51,7 +74,12 @@ export class FriendsComponent {
     getFriends() {
       this.accountsService.getUserFriends()
         .subscribe(
-          account => this.friends = account.friends,
+          account => {
+            if(account.friends) {
+              this.friends = account.friends;
+              this.friendsWithDetails = account.friendsWithDetails;
+            }
+          },
           error =>  this.errorMessage = <any>error
         );
     }    
