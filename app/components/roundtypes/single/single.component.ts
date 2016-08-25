@@ -196,6 +196,11 @@ export class SingleRoundComponent {
     // When save round button is clicked it will add an entry into account rounds and clear the currentRound object field.
     //console.log("When save round button is clicked it will add an entry into account rounds and clear the currentRound object field.");
       
+    this.userScoring.frontNineScores = [];
+    this.userScoring.backNineScores = [];
+    this.userScoring.holes = [];
+    this.userScoring.roundComplete = true;
+      
     let currentRoundData = {
       chosenCourse: this.chosenCourse._id,
       currentHoleIndex: this.currentHoleIndex,

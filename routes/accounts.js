@@ -127,6 +127,7 @@ router.put('/:id/finalize-current-round', function(req, res) {
             existingAccount.rounds.push({
                 score: roundData.totalScore,
                 courseId: roundData.chosenCourse,
+                scoreToPar: roundData.scoreToPar,
                 date: currentDate
             });
             existingAccount.currentRound = {};

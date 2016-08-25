@@ -33,8 +33,6 @@ export class AccountsService {
   updateCurrentRound(id:string, roundData:Object): Observable<string[]> {
     let headers = new Headers({'Content-Type': 'application/json'});
 
-    console.log('Updating round: ', roundData);
-
     return this.http.put('/api/accounts/' + id + '/update-current-round', JSON.stringify(roundData), {
       headers: headers
     }).map((res) => res.json().roundData);
@@ -43,8 +41,6 @@ export class AccountsService {
   
   finalizeRound(id:string, roundData:Object): Observable<string[]> {
     let headers = new Headers({'Content-Type': 'application/json'});
-
-    console.log('FINALIZING round: ', roundData);
 
     return this.http.put('/api/accounts/' + id + '/finalize-current-round', JSON.stringify(roundData), {
       headers: headers
