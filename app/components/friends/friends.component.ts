@@ -82,5 +82,20 @@ export class FriendsComponent {
           },
           error =>  this.errorMessage = <any>error
         );
-    }    
+    }   
+    
+    removeFriend(index:number) {
+      let friendToRemove = this.friendsWithDetails[index];
+      console.log("Will remove account as friend (just user id so we always get up to date info): ", friendToRemove);
+      this.friendsWithDetails.splice(index, 1);
+      
+      this.friendsService.removeFriend(this.user.id, friendToRemove.id)
+        .subscribe(
+          account => {
+            //this.friends.push(friendToRemove);
+            console.log("Friend successfully removed.");
+          },
+          error =>  this.errorMessage = <any>error
+        );        
+    }
 }

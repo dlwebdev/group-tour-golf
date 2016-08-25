@@ -16965,10 +16965,20 @@ $__System.registerDynamic("c", ["3", "16", "7", "17", "19", "1a"], true, functio
       var _this = this;
       this.accountsService.getUserFriends().subscribe(function(account) {
         if (account.friends) {
-          console.log("account.friendsWithDetails: ", account.friendsWithDetails[0]);
           _this.friends = account.friends;
           _this.friendsWithDetails = account.friendsWithDetails[0];
         }
+      }, function(error) {
+        return _this.errorMessage = error;
+      });
+    };
+    FriendsComponent.prototype.removeFriend = function(index) {
+      var _this = this;
+      var friendToRemove = this.friendsWithDetails[index];
+      console.log("Will remove account as friend (just user id so we always get up to date info): ", friendToRemove);
+      this.friendsWithDetails.splice(index, 1);
+      this.friendsService.removeFriend(this.user.id, friendToRemove.id).subscribe(function(account) {
+        console.log("Friend successfully removed.");
       }, function(error) {
         return _this.errorMessage = error;
       });
@@ -25806,6 +25816,12 @@ $__System.registerDynamic("1a", ["3", "52", "1c", "4f", "50", "51"], true, funct
     };
     FriendsService.prototype.addFriend = function(userId, friendId) {
       return this.http.get('/api/accounts/' + userId + '/addFriend/' + friendId);
+      map(function(res) {
+        return res.json();
+      }).catch(this.handleError);
+    };
+    FriendsService.prototype.removeFriend = function(userId, friendId) {
+      return this.http.get('/api/accounts/' + userId + '/removeFriend/' + friendId);
       map(function(res) {
         return res.json();
       }).catch(this.handleError);

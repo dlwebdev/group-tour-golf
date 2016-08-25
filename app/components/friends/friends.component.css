@@ -15,3 +15,12 @@ ul {
 .account-list .list-group-item {
   cursor: pointer;
 }
+
+.current-friends td .glyphicon {
+  font-size: 20px;
+  cursor: pointer;  
+}
+
+.glyphicon-remove-circle {
+  color:red;
+}

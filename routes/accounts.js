@@ -46,6 +46,31 @@ router.get('/:userId/addFriend/:friendId', function(req, res, next) {
     });
 });
 
+router.get('/:userId/removeFriend/:friendId', function(req, res, next) {
+    var userId = req.params.userId;
+    var friendId = req.params.friendId;
+    
+    Account.findOne({'id':userId},function(err, result) {
+        if(err) console.log('Err: ', err);
+        
+        var existingAccount = result;
+        console.log("Existing account for removing friend: ", existingAccount);
+        
+        for(var i = 0; i < existingAccount.friends; i++) {
+            if(existingAccount.friends[i] == friendId) {
+                existingAccount.friends.splice(i, 1);
+            }
+        }
+        
+        console.log("Existing account after removing friend: ", existingAccount);
+        
+        Account.update({id: userId}, existingAccount, {upsert: true}, function (err, updatedAccount) {
+            if(err) console.log('Err: ', err);
+            return res.send(updatedAccount);
+        });        
+        
+    });
+});
 
 router.get('/:id', function(req, res) {
     var id = req.params.id;

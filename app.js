@@ -93,7 +93,7 @@ app.get('/auth/twitter/callback',
       }
 
       if(hasAccount) {
-        //console.log('WILL UPDATE Account by updating last login: ', existingAccount);
+        console.log('WILL UPDATE Account by updating last login: ', existingAccount);
         
         existingAccount.lastLogin = currentDate;
       
@@ -104,7 +104,7 @@ app.get('/auth/twitter/callback',
         });     
         
       } else { 
-        //console.log('WILL CREATE NEW Account for this user.');
+        console.log('WILL CREATE NEW Account for this user.');
       
         var account = new Account({
           id: twitterId,

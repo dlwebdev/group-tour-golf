@@ -34,7 +34,13 @@ export class FriendsService {
     return this.http.get('/api/accounts/' + userId + '/addFriend/' + friendId);
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
-  }   
+  }  
+  
+  removeFriend(userId:string, friendId:string): Observable<string[]> {
+    return this.http.get('/api/accounts/' + userId + '/removeFriend/' + friendId);
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  }  
 
   /**
     * Handle HTTP error
