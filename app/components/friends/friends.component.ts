@@ -77,7 +77,7 @@ export class FriendsComponent {
           account => {
             if(account.friends) {
               this.friends = account.friends;
-              this.friendsWithDetails = account.friendsWithDetails;
+              this.friendsWithDetails = account.friendsWithDetails[0];
             }
           },
           error =>  this.errorMessage = <any>error

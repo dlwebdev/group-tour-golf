@@ -40,7 +40,6 @@ router.get('/:userId/addFriend/:friendId', function(req, res, next) {
         
         Account.update({id: userId}, existingAccount, {upsert: true}, function (err, updatedAccount) {
             if(err) console.log('Err: ', err);
-            //console.log('UPDATED SUCCESSFULLY!');
             return res.send(updatedAccount);
         });        
         

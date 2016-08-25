@@ -16965,8 +16965,9 @@ $__System.registerDynamic("c", ["3", "16", "7", "17", "19", "1a"], true, functio
       var _this = this;
       this.accountsService.getUserFriends().subscribe(function(account) {
         if (account.friends) {
+          console.log("account.friendsWithDetails: ", account.friendsWithDetails[0]);
           _this.friends = account.friends;
-          _this.friendsWithDetails = account.friendsWithDetails;
+          _this.friendsWithDetails = account.friendsWithDetails[0];
         }
       }, function(error) {
         return _this.errorMessage = error;
