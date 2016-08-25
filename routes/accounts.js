@@ -79,7 +79,16 @@ router.get('/:id', function(req, res) {
         if(err) console.log('Err: ', err);
         return res.send(result);
     });             
-});    
+});  
+
+router.get('/:id/get-current-round-scores', function(req, res) {
+    // returns the current round scores for this friend so you can update live scoring
+    var id = req.params.id;
+    Account.findOne({'id':id},function(err, result) {
+        if(err) console.log('Err: ', err);
+        return res.send(result);
+    });             
+});  
 
 router.put('/:id/update-current-round', function(req, res) {
     var id = req.params.id;

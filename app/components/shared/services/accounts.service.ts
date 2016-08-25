@@ -30,6 +30,12 @@ export class AccountsService {
                     .catch(this.handleError);
   } 
   
+  getFriendsRoundScores(id:string): Observable<Object[]> {
+    return this.http.get('/api/accounts/' + id + '/get-current-round-scores')
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  }  
+  
   updateCurrentRound(id:string, roundData:Object): Observable<string[]> {
     let headers = new Headers({'Content-Type': 'application/json'});
 

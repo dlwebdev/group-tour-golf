@@ -20607,6 +20607,24 @@ $__System.registerDynamic("e", ["3", "16", "7", "17", "19", "1f"], true, functio
       this.accountsService.updateCurrentRound(this.user.id, currentRoundData).subscribe(function(round) {}, function(error) {
         return _this.errorMessage = error;
       });
+      this.updateFriendsScores();
+    };
+    SingleRoundComponent.prototype.updateFriendsScores = function() {
+      var _this = this;
+      var _loop_1 = function(i) {
+        var frnd = this_1.friendsWithDetails[i];
+        console.log("Update scores for friend: ", frnd);
+        this_1.accountsService.getFriendsRoundScores(frnd.id).subscribe(function(acct) {
+          console.log("Friends current account: ", acct);
+          _this.friendsWithDetails[i].userScoring = acct.currentRound.userScoring;
+        }, function(error) {
+          return _this.errorMessage = error;
+        });
+      };
+      var this_1 = this;
+      for (var i = 0; i < this.friendsWithDetails.length; i++) {
+        _loop_1(i);
+      }
     };
     SingleRoundComponent.prototype.decrementHole = function() {
       this.currentHoleIndex--;
@@ -20653,6 +20671,10 @@ $__System.registerDynamic("e", ["3", "16", "7", "17", "19", "1f"], true, functio
     };
     SingleRoundComponent.prototype.finalizeRound = function() {
       var _this = this;
+      this.userScoring.frontNineScores = [];
+      this.userScoring.backNineScores = [];
+      this.userScoring.holes = [];
+      this.userScoring.roundComplete = true;
       var currentRoundData = {
         chosenCourse: this.chosenCourse._id,
         currentHoleIndex: this.currentHoleIndex,
@@ -45650,16 +45672,19 @@ $__System.registerDynamic("19", ["3", "52", "1c", "4f", "50", "51"], true, funct
         return res.json();
       }).catch(this.handleError);
     };
+    AccountsService.prototype.getFriendsRoundScores = function(id) {
+      return this.http.get('/api/accounts/' + id + '/get-current-round-scores').map(function(res) {
+        return res.json();
+      }).catch(this.handleError);
+    };
     AccountsService.prototype.updateCurrentRound = function(id, roundData) {
       var headers = new http_1.Headers({'Content-Type': 'application/json'});
-      console.log('Updating round: ', roundData);
       return this.http.put('/api/accounts/' + id + '/update-current-round', JSON.stringify(roundData), {headers: headers}).map(function(res) {
         return res.json().roundData;
       });
     };
     AccountsService.prototype.finalizeRound = function(id, roundData) {
       var headers = new http_1.Headers({'Content-Type': 'application/json'});
-      console.log('FINALIZING round: ', roundData);
       return this.http.put('/api/accounts/' + id + '/finalize-current-round', JSON.stringify(roundData), {headers: headers}).map(function(res) {
         return res.json().roundData;
       });

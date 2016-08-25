@@ -123,6 +123,25 @@ export class SingleRoundComponent {
         },
         error =>  this.errorMessage = <any>error
       );      
+      
+    this.updateFriendsScores();
+  }
+  
+  updateFriendsScores() {
+    for(let i = 0; i < this.friendsWithDetails.length; i++) {
+      let frnd = this.friendsWithDetails[i];
+      console.log("Update scores for friend: ", frnd);
+      
+      this.accountsService.getFriendsRoundScores(frnd.id)
+        .subscribe(
+          acct => {
+            // just returns this users current account which contains currentRound IF they are playing and saving scores
+            console.log("Friends current account: ", acct);
+            this.friendsWithDetails[i].userScoring = acct.currentRound.userScoring;
+          },
+          error =>  this.errorMessage = <any>error
+        );        
+    }
   }
   
   decrementHole() {
