@@ -30,6 +30,28 @@ export class AccountsService {
                     .catch(this.handleError);
   } 
   
+  updateCurrentRound(id:string, roundData:Object): Observable<string[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    console.log('Updating round: ', roundData);
+
+    return this.http.put('/api/accounts/' + id + '/update-current-round', JSON.stringify(roundData), {
+      headers: headers
+    }).map((res) => res.json().roundData);
+
+  }  
+  
+  finalizeRound(id:string, roundData:Object): Observable<string[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    console.log('FINALIZING round: ', roundData);
+
+    return this.http.put('/api/accounts/' + id + '/finalize-current-round', JSON.stringify(roundData), {
+      headers: headers
+    }).map((res) => res.json().roundData);
+
+  }  
+  
   getAccountsExcludingUser(id:string): Observable<Object[]> {
     return this.http.get('/api/accounts/exclude/' + id)
                     .map((res: Response) => res.json())

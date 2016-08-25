@@ -12,22 +12,22 @@
         <course-chooser (courseChosen)='courseChosen($event)'></course-chooser>
     </div>
     
+    <!--friendsWithDetails: {{ friendsWithDetails | json }}-->
+    
     <div *ngIf="courseHasBeenChosen">
         <h2 class="course-name text-center">{{chosenCourse.name}}</h2>
         
-        <p>
-            Update users scorecard after each hole. This way we won't lose scores if they lose connectivity. This will also allow 
-            us to get friends scores during round.
-        </p>
+        <div class="bordered">
+            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="showFriendPicker()">Track Friends Score</button>
+            
+            <div *ngIf="showFriendsPicker" class="friends-container">
+            	<div class="list-group course-list">
+            		<div *ngFor="let friend of friendsWithDetails; let i = index" (click)="addFriend(i)" class="list-group-item row">
+            			<span class="friend-name">{{ friend.username }}</span>
+            		</div>
+            	</div>             
+            </div>
         
-        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="showFriends">Track Friends Score</button>
-        
-        <div *ngIf="showFriendsPicker" class="friends-container">
-        	<div class="list-group course-list">
-        		<div *ngFor="let friend of friends; let i = index" class="list-group-item row">
-        			<span (click)="addFriend(i)" class="poll-name">{{ friend.name }}</span>
-        		</div>
-        	</div>             
         </div>
         
         <table class="fake-scorecard table table-bordered">
@@ -46,17 +46,21 @@
             </tr>
 			<tr class="row course-info tee-details">
 			    <td>
+			        <!--
                     <div class="hole-yardage">
                         Yds
                     </div>
+                    -->
                     <div class="hole-par">
                         Par
                     </div>			        
 			    </td>
                 <td *ngFor="let hole of frontNine">
+                    <!--
                     <div class="hole-yardage">
                         {{hole.distance}}
                     </div>
+                    -->
                     <div class="hole-par">
                         {{hole.par}}
                     </div>
@@ -68,6 +72,13 @@
                     {{ score === 0 ? '': score }}
                 </td>                
             </tr>	
+            
+            <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details">
+                <td>{{friendToTrack.username}}</td>
+                <td *ngFor="let score of friendToTrack.userScoring.frontNineScores">
+                    {{ score === 0 ? '': score }}
+                </td>                
+            </tr>                
             
             <!-- Add other users front 9 scores as well -->
             
@@ -89,17 +100,21 @@
             </tr>
 			<tr class="row course-info tee-details">
 			    <td>
+			        <!--
                     <div class="hole-yardage">
                         Yds
                     </div>
+                    -->
                     <div class="hole-par">
                         Par
                     </div>			        
 			    </td>
                 <td *ngFor="let hole of backNine">
+                    <!--
                     <div class="hole-yardage">
                         {{hole.distance}}
                     </div>
+                    -->
                     <div class="hole-par">
                         {{hole.par}}
                     </div>
@@ -110,7 +125,14 @@
                 <td *ngFor="let score of userScoring.backNineScores">
                     {{ score === 0 ? '': score }}
                 </td>                
-            </tr>     
+            </tr> 
+            
+            <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details">
+                <td>{{friendToTrack.username}}</td>
+                <td *ngFor="let score of friendToTrack.userScoring.backNineScores">
+                    {{ score === 0 ? '': score }}
+                </td>                
+            </tr>             
             
             <!-- Add other users back 9 scores as well -->
         </table>        
@@ -151,8 +173,15 @@
             </div>  
         </div>
         
-        <div class="row text-center user-current-over-under" [style.color] = "userScoring.scoreToPar < 0 ? 'red': 'black'">
+        <div *ngIf="!showSaveRound" class="row text-center user-current-over-under" [style.color] = "userScoring.scoreToPar < 0 ? 'red': 'black'">
             {{ userScoring.scoreToPar > 0 ? '+' : '' }}{{ userScoring.scoreToPar === 0 ? 'E': userScoring.scoreToPar }}
+        </div>
+        
+        <div *ngIf="showSaveRound">
+            <div class="text-center">
+                You shot a {{ userScoring.totalScore }}
+            </div>
+            <button type="button" class="btn btn-danger btn-lg btn-block" (click)="finalizeRound()">Save Round</button>
         </div>
         
     </div>

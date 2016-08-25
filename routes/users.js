@@ -55,26 +55,36 @@ router.get('/friends', function(req, res) {
       // for each friend id, get that account and push onto friendsWithDetails so 
       //   we always have most up to date info on them regarding handicap, etc.
       
+      console.log("Account friends: ", account.friends);
+      
+      
       async.forEachLimit(account.friends, 5, function(friendAccount, callback) {
         var friendId = friendAccount;
         var currentFriend;
         
+        console.log("Adding friend: ", friendAccount);
+        
         Account.find({id: friendId}, function (err, acct) {
           if(err) console.log('Err: ', err);
-          currentFriend = acct;
+          console.log("Account found: ", acct);
+          currentFriend = acct[0];
         }).then(function() {      
+          console.log("Pushing this friend: ", currentFriend);
           updatedAccount.friendsWithDetails.push(currentFriend);
+          console.log("updated account after pushing: ", updatedAccount);
           callback();
         });
         
         if(friendsProcessed === account.friends) {
           // All friends processed. Send back results immediately.
+          console.log("All friends processed 1. returning this: ", updatedAccount);
           res.json(updatedAccount);
         }
         friendsProcessed++;
       }, 
       function(err) {
         if (err) console.log(err);
+        console.log("ERR friends processed 2. returning this: ", updatedAccount);
         res.json(updatedAccount);
       });      
       

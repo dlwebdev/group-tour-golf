@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FORM_DIRECTIVES } from '@angular/forms';
 import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
+import { AuthService } from "../../shared/services/auth.service";
+import { AccountsService } from "../../shared/services/accounts.service";
+
 import { ChooseCourseDirective } from "../../shared/directives/choose-course/choose-course.directive";
 
 @Component({
@@ -14,17 +17,20 @@ export class SingleRoundComponent {
   chosenCourse: object;
   courseHasBeenChosen: boolean = false;
   showFriendsPicker: boolean = false;
+  showSaveRound: boolean = false;
   currentHoleIndex: number = -1;
   currentHole: object;
   userScoring: object;
   
-  scoreOptions: array: [];
-  friends: array: [];
+  scoreOptions: array = [];
+  friends: array = [];
+  friendsWithDetails: any = [];
+  friendsToTrack: array = [];
   
   frontNine: object;
   backNine: object;
     
-  constructor() {
+  constructor(private router: Router, private accountsService: AccountsService, private authService: AuthService) {
       this.userScoring = {
           totalScore: 0,
           frontNineTotal: 0,
@@ -37,6 +43,26 @@ export class SingleRoundComponent {
       
       this.scoreOptions = [1,2,3,4,5,6,7,8];
   }
+  
+  ngOnInit() {
+    this.checkIfLoggedIn();
+  }
+  
+  checkIfLoggedIn() {
+      // If the user is logged in it will return the user object, otherwise will redirect to login
+      this.authService.getCurrentUser()
+            .subscribe(
+                user => {
+                    console.log('Current User response: ', user);
+                    this.user = user;
+                    
+                    if(!this.user.id) {
+                      window.location.href = '/auth/twitter';                     
+                    }
+                },
+                error =>  this.errorMessage = <any>error
+            );      
+  }  
     
   courseChosen(course) {
     // Handle the event
@@ -51,7 +77,23 @@ export class SingleRoundComponent {
     
     this.currentHoleIndex = 0;
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
-  }    
+    
+    // Add friends
+    this.addAvailableFriends();
+  } 
+  
+  addAvailableFriends() {
+      this.accountsService.getUserFriends()
+        .subscribe(
+          account => {
+            if(account.friends) {
+              this.friends = account.friends;
+              this.friendsWithDetails = account.friendsWithDetails;
+            }            
+          },
+          error =>  this.errorMessage = <any>error
+        );    
+  }
   
   incrementHole() {
     this.currentHoleIndex++;
@@ -61,6 +103,26 @@ export class SingleRoundComponent {
     }
     //console.log("Current Hole Index: ", this.currentHoleIndex);
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+    
+    this.saveRoundData();
+  }
+  
+  saveRoundData() {
+    //console.log("SAVING CURRENT ROUND DATA.");
+    
+    let currentRoundData = {
+      chosenCourse: this.chosenCourse._id,
+      currentHoleIndex: this.currentHoleIndex,
+      userScoring: this.userScoring
+    };
+    
+    this.accountsService.updateCurrentRound(this.user.id, currentRoundData)
+      .subscribe(
+        round => {
+          //console.log("Round was successfully saved: ", round);
+        },
+        error =>  this.errorMessage = <any>error
+      );      
   }
   
   decrementHole() {
@@ -75,13 +137,28 @@ export class SingleRoundComponent {
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
   }  
   
-  showFriends() {
-    console.log("Show friends list to choose friend to add to scorecard");
+  showFriendPicker() {
+    //console.log("Show friends list to choose friend to add to scorecard");
     this.showFriendsPicker = true;
   }
   
   addFriend(index:number) {
-    let friendToAdd = this.friends[index];
+    let friendToAdd = this.friendsWithDetails[index];
+    
+    friendToAdd.userScoring = {
+          totalScore: 0,
+          frontNineTotal: 0,
+          backNineTotal: 0,
+          scoreToPar: 0,
+          frontNineScores: [0,0,0,0,0,0,0,0,0,0],
+          backNineScores:  [0,0,0,0,0,0,0,0,0,0,0],
+          holes: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    };
+    
+    this.friendsToTrack.push(friendToAdd);
+    
+    //console.log("Add this users scores to scorecard.");
+    
     this.showFriendsPicker = false;
   }
   
@@ -107,6 +184,32 @@ export class SingleRoundComponent {
           }
       }
       this.tallyCurrentTotals();
+      
+      if(this.currentHoleIndex === 18) {
+        console.log("Just entered score for 18th hole.");
+        this.saveRoundData();
+        this.showSaveRound = true;
+      }
+  }
+  
+  finalizeRound() {
+    // When save round button is clicked it will add an entry into account rounds and clear the currentRound object field.
+    //console.log("When save round button is clicked it will add an entry into account rounds and clear the currentRound object field.");
+      
+    let currentRoundData = {
+      chosenCourse: this.chosenCourse._id,
+      currentHoleIndex: this.currentHoleIndex,
+      userScoring: this.userScoring
+    };      
+      
+    this.accountsService.finalizeRound(this.user.id, currentRoundData)
+      .subscribe(
+        round => {
+          //console.log("Round was successfully finalized: ", round);
+          this.router.navigate(['/dashboard']);
+        },
+        error =>  this.errorMessage = <any>error
+      );       
   }
   
   tallyCurrentTotals() {

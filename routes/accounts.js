@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var moment = require('moment');
 
 var Account = require('../server/models/account');
 
@@ -79,5 +80,64 @@ router.get('/:id', function(req, res) {
         return res.send(result);
     });             
 });    
+
+router.put('/:id/update-current-round', function(req, res) {
+    var id = req.params.id;
+    console.log('Will save the current round data for user with id of: ', id);
+
+    var roundData = req.body;
+
+    //delete poll._id;
+
+    if (id) {
+        Account.findOne({'id':id},function(err, account) {
+            if(err) console.log('Err: ', err);
+            console.log("Located account to update round for: ", account);
+            
+            var existingAccount = account;
+            
+            console.log("Existing account before saving current round data: ", existingAccount);
+            
+            existingAccount.currentRound = roundData;
+            
+            Account.update({id: id}, existingAccount, {upsert: true}, function (err, updatedAccount) {
+                if(err) console.log('Err: ', err);
+                return res.send(updatedAccount);
+            });            
+        });         
+    }    
+});
+
+router.put('/:id/finalize-current-round', function(req, res) {
+    var id = req.params.id;
+    //console.log('Will FINALIZE the current round data for user with id of: ', id);
+
+    var roundData = req.body;
+    var currentDate = moment().format('MM-DD-YYYY');
+
+    if (id) {
+        Account.findOne({'id':id},function(err, account) {
+            if(err) console.log('Err: ', err);
+            //console.log("Located account to update round for: ", account);
+            
+            var existingAccount = account;
+            
+            //console.log("Existing account before saving current round data: ", existingAccount);
+            
+            existingAccount.rounds.push({
+                score: roundData.totalScore,
+                courseId: roundData.chosenCourse,
+                date: currentDate
+            });
+            existingAccount.currentRound = {};
+            delete existingAccount.currentRound;
+            
+            Account.update({id: id}, existingAccount, {upsert: true}, function (err, updatedAccount) {
+                if(err) console.log('Err: ', err);
+                return res.send(updatedAccount);
+            });            
+        });         
+    }    
+});
 
 module.exports = router;

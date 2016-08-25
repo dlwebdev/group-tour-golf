@@ -91,3 +91,7 @@ tr.header {
 .user-current-over-under {
   font-size: 35px;
 }
+
+.bordered {
+  margin: 20px;
+}

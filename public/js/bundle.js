@@ -16966,7 +16966,7 @@ $__System.registerDynamic("c", ["3", "16", "7", "17", "19", "1a"], true, functio
       this.accountsService.getUserFriends().subscribe(function(account) {
         if (account.friends) {
           _this.friends = account.friends;
-          _this.friendsWithDetails = account.friendsWithDetails[0];
+          _this.friendsWithDetails = account.friendsWithDetails;
         }
       }, function(error) {
         return _this.errorMessage = error;
@@ -20501,7 +20501,7 @@ $__System.registerDynamic("1f", ["3", "20"], true, function($__require, exports,
   return module.exports;
 });
 
-$__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require, exports, module) {
+$__System.registerDynamic("e", ["3", "16", "7", "17", "19", "1f"], true, function($__require, exports, module) {
   "use strict";
   ;
   var define,
@@ -20526,12 +20526,22 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
   var core_1 = $__require('3');
   var forms_1 = $__require('16');
   var router_1 = $__require('7');
+  var auth_service_1 = $__require('17');
+  var accounts_service_1 = $__require('19');
   var choose_course_directive_1 = $__require('1f');
   var SingleRoundComponent = (function() {
-    function SingleRoundComponent() {
+    function SingleRoundComponent(router, accountsService, authService) {
+      this.router = router;
+      this.accountsService = accountsService;
+      this.authService = authService;
       this.courseHasBeenChosen = false;
       this.showFriendsPicker = false;
+      this.showSaveRound = false;
       this.currentHoleIndex = -1;
+      this.scoreOptions = [];
+      this.friends = [];
+      this.friendsWithDetails = [];
+      this.friendsToTrack = [];
       this.userScoring = {
         totalScore: 0,
         frontNineTotal: 0,
@@ -20543,6 +20553,21 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
       };
       this.scoreOptions = [1, 2, 3, 4, 5, 6, 7, 8];
     }
+    SingleRoundComponent.prototype.ngOnInit = function() {
+      this.checkIfLoggedIn();
+    };
+    SingleRoundComponent.prototype.checkIfLoggedIn = function() {
+      var _this = this;
+      this.authService.getCurrentUser().subscribe(function(user) {
+        console.log('Current User response: ', user);
+        _this.user = user;
+        if (!_this.user.id) {
+          window.location.href = '/auth/twitter';
+        }
+      }, function(error) {
+        return _this.errorMessage = error;
+      });
+    };
     SingleRoundComponent.prototype.courseChosen = function(course) {
       this.chosenCourse = course;
       this.frontNine = this.chosenCourse.holes.slice(0, 10);
@@ -20551,6 +20576,18 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
       console.log("Hide the course chooser and BEGIN ROUND HERE.");
       this.currentHoleIndex = 0;
       this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+      this.addAvailableFriends();
+    };
+    SingleRoundComponent.prototype.addAvailableFriends = function() {
+      var _this = this;
+      this.accountsService.getUserFriends().subscribe(function(account) {
+        if (account.friends) {
+          _this.friends = account.friends;
+          _this.friendsWithDetails = account.friendsWithDetails;
+        }
+      }, function(error) {
+        return _this.errorMessage = error;
+      });
     };
     SingleRoundComponent.prototype.incrementHole = function() {
       this.currentHoleIndex++;
@@ -20558,6 +20595,18 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
         this.currentHoleIndex++;
       }
       this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
+      this.saveRoundData();
+    };
+    SingleRoundComponent.prototype.saveRoundData = function() {
+      var _this = this;
+      var currentRoundData = {
+        chosenCourse: this.chosenCourse._id,
+        currentHoleIndex: this.currentHoleIndex,
+        userScoring: this.userScoring
+      };
+      this.accountsService.updateCurrentRound(this.user.id, currentRoundData).subscribe(function(round) {}, function(error) {
+        return _this.errorMessage = error;
+      });
     };
     SingleRoundComponent.prototype.decrementHole = function() {
       this.currentHoleIndex--;
@@ -20566,12 +20615,21 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
       }
       this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
     };
-    SingleRoundComponent.prototype.showFriends = function() {
-      console.log("Show friends list to choose friend to add to scorecard");
+    SingleRoundComponent.prototype.showFriendPicker = function() {
       this.showFriendsPicker = true;
     };
     SingleRoundComponent.prototype.addFriend = function(index) {
-      var friendToAdd = this.friends[index];
+      var friendToAdd = this.friendsWithDetails[index];
+      friendToAdd.userScoring = {
+        totalScore: 0,
+        frontNineTotal: 0,
+        backNineTotal: 0,
+        scoreToPar: 0,
+        frontNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        backNineScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        holes: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      };
+      this.friendsToTrack.push(friendToAdd);
       this.showFriendsPicker = false;
     };
     SingleRoundComponent.prototype.setHoleScore = function(score) {
@@ -20587,6 +20645,24 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
         }
       }
       this.tallyCurrentTotals();
+      if (this.currentHoleIndex === 18) {
+        console.log("Just entered score for 18th hole.");
+        this.saveRoundData();
+        this.showSaveRound = true;
+      }
+    };
+    SingleRoundComponent.prototype.finalizeRound = function() {
+      var _this = this;
+      var currentRoundData = {
+        chosenCourse: this.chosenCourse._id,
+        currentHoleIndex: this.currentHoleIndex,
+        userScoring: this.userScoring
+      };
+      this.accountsService.finalizeRound(this.user.id, currentRoundData).subscribe(function(round) {
+        _this.router.navigate(['/dashboard']);
+      }, function(error) {
+        return _this.errorMessage = error;
+      });
     };
     SingleRoundComponent.prototype.tallyCurrentTotals = function() {
       var currentFrontNineTotal = this.userScoring.frontNineScores.slice(0, 9).reduce(this.add, 0);
@@ -20620,7 +20696,7 @@ $__System.registerDynamic("e", ["3", "16", "7", "1f"], true, function($__require
       templateUrl: 'components/roundtypes/single/single.component.html',
       styleUrls: ['components/roundtypes/single/single.component.css'],
       directives: [forms_1.FORM_DIRECTIVES, router_1.ROUTER_DIRECTIVES, choose_course_directive_1.ChooseCourseDirective]
-    }), __metadata('design:paramtypes', [])], SingleRoundComponent);
+    }), __metadata('design:paramtypes', [router_1.Router, accounts_service_1.AccountsService, auth_service_1.AuthService])], SingleRoundComponent);
     return SingleRoundComponent;
   }());
   exports.SingleRoundComponent = SingleRoundComponent;
@@ -45573,6 +45649,20 @@ $__System.registerDynamic("19", ["3", "52", "1c", "4f", "50", "51"], true, funct
       return this.http.get('/api/accounts/').map(function(res) {
         return res.json();
       }).catch(this.handleError);
+    };
+    AccountsService.prototype.updateCurrentRound = function(id, roundData) {
+      var headers = new http_1.Headers({'Content-Type': 'application/json'});
+      console.log('Updating round: ', roundData);
+      return this.http.put('/api/accounts/' + id + '/update-current-round', JSON.stringify(roundData), {headers: headers}).map(function(res) {
+        return res.json().roundData;
+      });
+    };
+    AccountsService.prototype.finalizeRound = function(id, roundData) {
+      var headers = new http_1.Headers({'Content-Type': 'application/json'});
+      console.log('FINALIZING round: ', roundData);
+      return this.http.put('/api/accounts/' + id + '/finalize-current-round', JSON.stringify(roundData), {headers: headers}).map(function(res) {
+        return res.json().roundData;
+      });
     };
     AccountsService.prototype.getAccountsExcludingUser = function(id) {
       return this.http.get('/api/accounts/exclude/' + id).map(function(res) {
