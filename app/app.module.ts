@@ -26,6 +26,7 @@ import { AuthService } from "./components/shared/services/auth.service";
 import { CourseService } from "./components/shared/services/course.service";
 import { FriendsService } from "./components/shared/services/friends.service";
 import { AccountsService } from "./components/shared/services/accounts.service";
+import { RoundsService } from "./components/shared/services/rounds.service";
 
 @NgModule({
     imports: [
@@ -38,7 +39,8 @@ import { AccountsService } from "./components/shared/services/accounts.service";
         AuthService,
         CourseService,
         FriendsService,
-        AccountsService
+        AccountsService,
+        RoundsService
     ],    
     declarations: [
         AppComponent,

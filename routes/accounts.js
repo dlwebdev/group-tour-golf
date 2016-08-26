@@ -3,6 +3,7 @@ var router = express.Router();
 var moment = require('moment');
 
 var Account = require('../server/models/account');
+var Round = require('../server/models/round');
 
 /* GET accounts listing. */
 
@@ -75,11 +76,29 @@ router.get('/:userId/removeFriend/:friendId', function(req, res, next) {
 
 router.get('/:id', function(req, res) {
     var id = req.params.id;
-    Account.findOne({'_id':id},function(err, result) {
+    Account.findOne({'id':id},function(err, result) {
         if(err) console.log('Err: ', err);
         return res.send(result);
     });             
 });  
+
+router.put('/:id', function(req, res) {
+    var account = req.body;
+    var id = account._id;
+
+    delete account._id;
+
+    if (id) {
+        Account.update({_id: id}, account, {upsert: true}, function (err, account) {
+            if(err) console.log('Err: ', err);
+            //res.json(account);
+            Account.findOne({'_id':id},function(err, result) {
+                if(err) console.log('Err: ', err);
+                return res.send(result);
+            });           
+        });
+    }    
+});
 
 router.get('/:id/get-current-round-scores', function(req, res) {
     // returns the current round scores for this friend so you can update live scoring
@@ -123,6 +142,24 @@ router.put('/:id/finalize-current-round', function(req, res) {
 
     var roundData = req.body;
     var currentDate = moment().format('MM-DD-YYYY');
+    
+    // create entry in rounds table.
+
+    var round = new Round({
+      userId: req.body.userId,
+      userName: req.body.userName,
+      score: req.body.score,
+      courseName: req.body.courseName,
+      courseId: req.body.courseId,
+      scoreToPar: req.body.scoreToPar,
+      date: currentDate
+    });
+
+    round.save(function (err, round) {
+      if (err) { 
+        console.log('error saving round: ', err);
+      }
+    });    
 
     if (id) {
         Account.findOne({'id':id},function(err, account) {

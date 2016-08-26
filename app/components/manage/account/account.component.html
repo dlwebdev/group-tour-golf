@@ -1,9 +1,14 @@
 <div class="container">
     <h1>Account Management</h1>
 
-    Account: {{ account | json }}
+    <!--Account: {{ account | json }}-->
     
-    <p>
-        Form to edit account details such as displayname.
-    </p>   
+    <form>
+      <div class="form-group">
+        <label for="displayname">Display Name:</label>
+        <input type="text" [(ngModel)]="account.displayname" [ngModelOptions]="{standalone: true}" class="form-control" id="displayname" placeholder="Display Name">
+      </div>
+      
+      <button type="button" (click)="saveAccount()" class="btn btn-default">Save</button>
+    </form>    
 </div>

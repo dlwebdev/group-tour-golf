@@ -95,3 +95,7 @@ tr.header {
 .bordered {
   margin: 20px;
 }
+
+.friends-container .list-group-item {
+  cursor: pointer;
+}

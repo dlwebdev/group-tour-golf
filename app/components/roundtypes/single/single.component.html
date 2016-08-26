@@ -12,7 +12,7 @@
         <course-chooser (courseChosen)='courseChosen($event)'></course-chooser>
     </div>
     
-    <!--friendsWithDetails: {{ friendsWithDetails | json }}-->
+    <!--friendsToTrack: {{ friendsToTrack | json }}-->
     
     <div *ngIf="courseHasBeenChosen">
         <h2 class="course-name text-center">{{chosenCourse.name}}</h2>

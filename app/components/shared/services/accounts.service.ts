@@ -24,6 +24,14 @@ export class AccountsService {
                     .catch(this.handleError);
   } 
   
+  saveAccount(account:Object): Observable<string[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    return this.http.put('/api/accounts/' + account.id, JSON.stringify(account), {
+      headers: headers
+    }).map((res) => res.json().account);
+  }  
+  
   getCurrentAccount(): Observable<string[]> {
     return this.http.get('/api/user/current-user')
                     .map((res: Response) => res.json())
@@ -53,6 +61,8 @@ export class AccountsService {
   
   finalizeRound(id:string, roundData:Object): Observable<string[]> {
     let headers = new Headers({'Content-Type': 'application/json'});
+    
+    console.log("Finalizing round data: ", roundData);
 
     return this.http.put('/api/accounts/' + id + '/finalize-current-round', JSON.stringify(roundData), {
       headers: headers
@@ -71,6 +81,14 @@ export class AccountsService {
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
   }  
+  
+  getFriendsDetailed(friendsArray: array): Observable<Object[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    return this.http.put('/api/user/friends-detailed', friendsArray, {
+      headers: headers
+    }).map((res) => res.json());
+  }   
 
   /**
     * Handle HTTP error

@@ -4,7 +4,7 @@
     <!--
     User: <pre>{{ user | json }}</pre>
     <br><br>
-    Friends: <pre>{{ friends | json }}</pre>
+    friendsRecentRounds: <pre>{{ friendsRecentRounds | json }}</pre>
     -->
     
     <p>Add Friends</p>
@@ -35,6 +35,33 @@
             </tr>
           </tbody>
         </table>
+    </div>  
+    
+    <hr>
+    
+    <h2 class="sub-header">Friends Recent Rounds</h2>
+          
+    <p>Should have a rounds table so we can pull 10 most recent rounds, etc.</p>
+          
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Course</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let round of friendsRecentRounds; let i = index;">
+            <td>{{ round.userName }}</td>
+            <td>{{ round.score }}</td>
+            <td>{{ round.courseName }}</td>
+            <td>{{ round.date }}</td>                  
+          </tr>
+        </tbody>
+      </table>
     </div>  
     
 </div>

@@ -15,6 +15,7 @@ var rsvps = require('./routes/rsvps');
 var users = require('./routes/users');
 var courses = require('./routes/courses');
 var accounts = require('./routes/accounts');
+var rounds = require('./routes/rounds');
 
 require('./server/passport')(passport);
 
@@ -128,6 +129,7 @@ app.use('/api/user', users);
 app.use('/api/rsvps', rsvps);
 app.use('/api/courses', courses);
 app.use('/api/accounts', accounts);
+app.use('/api/rounds', rounds);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

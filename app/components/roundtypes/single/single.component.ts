@@ -21,6 +21,7 @@ export class SingleRoundComponent {
   currentHoleIndex: number = -1;
   currentHole: object;
   userScoring: object;
+  user: object;
   
   scoreOptions: array = [];
   friends: array = [];
@@ -46,6 +47,8 @@ export class SingleRoundComponent {
   
   ngOnInit() {
     this.checkIfLoggedIn();
+    // Add friends
+    this.addAvailableFriends();
   }
   
   checkIfLoggedIn() {
@@ -77,23 +80,31 @@ export class SingleRoundComponent {
     
     this.currentHoleIndex = 0;
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
-    
-    // Add friends
-    this.addAvailableFriends();
   } 
   
   addAvailableFriends() {
+    
       this.accountsService.getUserFriends()
         .subscribe(
           account => {
             if(account.friends) {
               this.friends = account.friends;
-              this.friendsWithDetails = account.friendsWithDetails;
+              this.getFriendsDetailed();
             }            
           },
           error =>  this.errorMessage = <any>error
         );    
   }
+  
+  getFriendsDetailed() {
+        this.accountsService.getFriendsDetailed(this.friends)
+                  .subscribe(
+                    friendsDetailed => {
+                      this.friendsWithDetails = friendsDetailed;
+                    },
+                    error =>  this.errorMessage = <any>error
+                  );        
+  }  
   
   incrementHole() {
     this.currentHoleIndex++;
@@ -128,8 +139,8 @@ export class SingleRoundComponent {
   }
   
   updateFriendsScores() {
-    for(let i = 0; i < this.friendsWithDetails.length; i++) {
-      let frnd = this.friendsWithDetails[i];
+    for(let i = 0; i < this.friendsToTrack.length; i++) {
+      let frnd = this.friendsToTrack[i];
       console.log("Update scores for friend: ", frnd);
       
       this.accountsService.getFriendsRoundScores(frnd.id)
@@ -137,7 +148,7 @@ export class SingleRoundComponent {
           acct => {
             // just returns this users current account which contains currentRound IF they are playing and saving scores
             console.log("Friends current account: ", acct);
-            this.friendsWithDetails[i].userScoring = acct.currentRound.userScoring;
+            this.friendsToTrack[i].userScoring = acct.currentRound.userScoring;
           },
           error =>  this.errorMessage = <any>error
         );        
@@ -221,8 +232,15 @@ export class SingleRoundComponent {
     this.userScoring.roundComplete = true;
       
     let currentRoundData = {
+      userId: this.user.id,
+      userName: this.user.displayname,
+      score: this.userScoring.totalScore,
+      courseId: this.chosenCourse._id,
+      courseName: this.chosenCourse.name,
       chosenCourse: this.chosenCourse._id,
       currentHoleIndex: this.currentHoleIndex,
+      scoreToPar: this.userScoring.scoreToPar,
+      totalScore: this.userScoring.totalScore,
       userScoring: this.userScoring
     };      
       

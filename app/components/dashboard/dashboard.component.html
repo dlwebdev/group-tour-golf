@@ -52,33 +52,27 @@
 
           </div>
 
-          <h2 class="sub-header">Recent Rounds</h2>
+          <h2 class="sub-header">Your Recent Rounds</h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
                   <th>Score</th>
-                  <th>User</th>
                   <th>Course</th>
                   <th>Date</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>77</td>
-                  <td>ECUdweber</td>
-                  <td>Catawba Creek</td>
-                  <td>08/17/2016</td>
-                </tr>
-                <tr>
-                  <td>75</td>
-                  <td>ralphdiaz</td>
-                  <td>Catawba Creek</td>
-                  <td>08/17/2016</td>
+                <tr *ngFor="let round of recentRounds; let i = index;">
+                  <td>{{ round.score }}</td>
+                  <td>{{ round.courseName }}</td>
+                  <td>{{ round.date }}</td>                  
                 </tr>
               </tbody>
             </table>
           </div>
+          
+          
         </div>
       </div>
     </div>

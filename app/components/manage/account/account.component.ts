@@ -24,5 +24,15 @@ export class AccountManagementComponent {
           account => this.account = account,
           error =>  this.errorMessage = <any>error
         );
-    }    
+    } 
+    
+    saveAccount() {
+      this.accountsService.saveAccount(this.account)
+        .subscribe(
+          resp => {
+            this.router.navigate(['/dashboard']);
+          },
+          error => this.errorMessage = <any>error
+        );      
+    }
 }
