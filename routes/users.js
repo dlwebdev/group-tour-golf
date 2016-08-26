@@ -7,21 +7,28 @@ var Account = require('../server/models/account');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.json({
-    name: "John",
-    last: "Smith"
+    name: "Fuck",
+    last: "Off"
   });
 });
 
 router.get('/authenticated', function(req, res, next) {
   var authed = false;
+  
   if (req.isAuthenticated()) {
     authed = true;
   }
   res.json({'authenticated': authed});
-});    
+});  
+
+router.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
     
 router.get('/current-user', function(req, res, next) {
   if (req.isAuthenticated()) {
+    
     var userId = req.user.twitter.id;
     
     Account.find({'id': userId}, function (err, account) {

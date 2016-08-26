@@ -10,8 +10,8 @@
     <p>Add Friends</p>
     
 	  <div class="list-group account-list">
-  		<div *ngFor="let account of accounts; let i = index" class="list-group-item row">
-  			<span (click)="addFriend(i)" class="account-name">{{ account.username }} - Handicap: {{ account.handicap }}</span>
+  		<div *ngFor="let account of accounts; let i = index" class="list-group-item row" (click)="addFriend(i)" >
+  			<span class="account-name">{{ account.username }} - Handicap: {{ account.handicap }}</span>
   		</div>
 	  </div>  
 	  

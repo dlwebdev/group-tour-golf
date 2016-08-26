@@ -47,17 +47,13 @@ mongoose.connection.on('error', function() {
 
 app.use(session({ 
   secret: 'my_precious_l@3', 
-  cookie: { maxAge: 60000 },
+  cookie: { maxAge: 18000000 }, // Session set to 5 hours, enough for a round of golf
   saveUninitialized: false, // don't create session until something stored 
-  resave: false, //don't save session if unmodified     
+  resave: true, //don't save session if unmodified     
+  rolling: true,
+  name: 'ggt-session',
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));   
-  
-app.use(session({
-  secret: 'my_precious_l@3',
-  resave: false,
-  saveUninitialized: true
-})); 
 
 app.use(passport.initialize());
 app.use(passport.session());   
@@ -79,7 +75,7 @@ app.get('/auth/twitter/callback',
     var currentDate = moment().format('MM-DD-YYYY');
     
     Account.find({id: twitterId}, function (err, account) {
-      console.log('Found account with that twitter id: ', account);
+      //console.log('Found account with that twitter id: ', account);
       if(err) console.log('Err: ', err);
       
       if(account) {
@@ -93,7 +89,7 @@ app.get('/auth/twitter/callback',
       }
 
       if(hasAccount) {
-        console.log('WILL UPDATE Account by updating last login: ', existingAccount);
+        //console.log('WILL UPDATE Account by updating last login: ', existingAccount);
         
         existingAccount.lastLogin = currentDate;
       
@@ -104,7 +100,7 @@ app.get('/auth/twitter/callback',
         });     
         
       } else { 
-        console.log('WILL CREATE NEW Account for this user.');
+        //console.log('WILL CREATE NEW Account for this user.');
       
         var account = new Account({
           id: twitterId,

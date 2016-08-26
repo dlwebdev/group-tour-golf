@@ -20664,7 +20664,6 @@ $__System.registerDynamic("e", ["3", "16", "7", "17", "19", "1f"], true, functio
       }
       this.tallyCurrentTotals();
       if (this.currentHoleIndex === 18) {
-        console.log("Just entered score for 18th hole.");
         this.saveRoundData();
         this.showSaveRound = true;
       }
@@ -20911,11 +20910,11 @@ $__System.registerDynamic("10", ["3", "7", "20"], true, function($__require, exp
     AddCourseComponent.prototype.saveCourse = function() {
       var _this = this;
       this.course.name = this.course.name + " - " + this.course.teeBox;
-      this.courseService.createCourse(this.course).subscribe(this.router.navigate(['/manage/courses']));
-      (function(error) {
+      this.courseService.createCourse(this.course).subscribe(function(resp) {
+        _this.router.navigate(['/manage/courses']);
+      }, function(error) {
         return _this.errorMessage = error;
       });
-      ;
     };
     AddCourseComponent = __decorate([core_1.Component({
       selector: 'my-add-course',
@@ -25696,19 +25695,19 @@ $__System.registerDynamic("11", ["3", "7", "20"], true, function($__require, exp
     };
     EditCourseComponent.prototype.getCourse = function(id) {
       var _this = this;
-      this.courseService.getCourse(id).subscribe(function(course) {
-        return _this.course = course;
+      this.courseService.getCourse(id).subscribe(function(resp) {
+        _this.course = resp;
       }, function(error) {
         return _this.errorMessage = error;
       });
     };
     EditCourseComponent.prototype.saveCourse = function() {
       var _this = this;
-      this.courseService.updateCourse(this.course).subscribe(this.router.navigate(['/manage/courses']));
-      (function(error) {
+      this.courseService.updateCourse(this.course).subscribe(function(resp) {
+        _this.router.navigate(['/manage/courses']);
+      }, function(error) {
         return _this.errorMessage = error;
       });
-      ;
     };
     EditCourseComponent = __decorate([core_1.Component({
       selector: 'my-edit-course',
@@ -25913,14 +25912,12 @@ $__System.registerDynamic("1a", ["3", "52", "1c", "4f", "50", "51"], true, funct
       }).catch(this.handleError);
     };
     FriendsService.prototype.addFriend = function(userId, friendId) {
-      return this.http.get('/api/accounts/' + userId + '/addFriend/' + friendId);
-      map(function(res) {
+      return this.http.get('/api/accounts/' + userId + '/addFriend/' + friendId).map(function(res) {
         return res.json();
       }).catch(this.handleError);
     };
     FriendsService.prototype.removeFriend = function(userId, friendId) {
-      return this.http.get('/api/accounts/' + userId + '/removeFriend/' + friendId);
-      map(function(res) {
+      return this.http.get('/api/accounts/' + userId + '/removeFriend/' + friendId).map(function(res) {
         return res.json();
       }).catch(this.handleError);
     };

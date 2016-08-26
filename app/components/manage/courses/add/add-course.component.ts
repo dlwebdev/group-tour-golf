@@ -51,7 +51,9 @@ export class AddCourseComponent {
     
     this.courseService.createCourse(this.course)
       .subscribe(
-        this.router.navigate(['/manage/courses']);
+        resp => {
+          this.router.navigate(['/manage/courses']);
+        },
         error =>  this.errorMessage = <any>error
       );
   }

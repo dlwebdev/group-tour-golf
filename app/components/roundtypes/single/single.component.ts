@@ -205,7 +205,7 @@ export class SingleRoundComponent {
       this.tallyCurrentTotals();
       
       if(this.currentHoleIndex === 18) {
-        console.log("Just entered score for 18th hole.");
+        //console.log("Just entered score for 18th hole.");
         this.saveRoundData();
         this.showSaveRound = true;
       }

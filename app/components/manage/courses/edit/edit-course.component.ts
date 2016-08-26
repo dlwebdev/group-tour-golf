@@ -31,16 +31,20 @@ export class EditCourseComponent {
   getCourse(id:string) {
     this.courseService.getCourse(id)
       .subscribe(
-        course => this.course = course,
-        error =>  this.errorMessage = <any>error
+        resp => {
+          this.course = resp;
+        },
+        error => this.errorMessage = <any>error
       );
   }   
     
   saveCourse() {
     this.courseService.updateCourse(this.course)
       .subscribe(
-        this.router.navigate(['/manage/courses']);
-        error =>  this.errorMessage = <any>error
+        resp => {
+          this.router.navigate(['/manage/courses']);
+        },
+        error => this.errorMessage = <any>error
       );
   }
     

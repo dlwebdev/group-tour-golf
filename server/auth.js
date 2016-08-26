@@ -5,7 +5,7 @@ module.exports = {
   'twitterAuth': {
     'consumerKey': '99wrIycSNYTESNedd55IvWgwu',
     'consumerSecret': 'VRONmSUcU1w6bpOlKBbrFq0CTGVgWTo7wtzBnm2zmcuoFwumUG',
-    'callbackURL': 'https://grouptourgolf.herokuapp.com/auth/twitter/callback'
-    //'callbackURL': 'https://group-tour-golf-dlwebdev.c9users.io/auth/twitter/callback'
+    //'callbackURL': 'https://grouptourgolf.herokuapp.com/auth/twitter/callback'
+    'callbackURL': 'https://group-tour-golf-dlwebdev.c9users.io/auth/twitter/callback'
   }    
 };
