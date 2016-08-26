@@ -23,7 +23,7 @@
             <div *ngIf="showFriendsPicker" class="friends-container">
             	<div class="list-group course-list">
             		<div *ngFor="let friend of friendsWithDetails; let i = index" (click)="addFriend(i)" class="list-group-item row">
-            			<span class="friend-name">{{ friend.username }}</span>
+            			<span class="friend-name">{{ friend.displayname }}</span>
             		</div>
             	</div>             
             </div>
@@ -74,7 +74,7 @@
             </tr>	
             
             <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details">
-                <td>{{friendToTrack.username}}</td>
+                <td>{{friendToTrack.displayname}}</td>
                 <td *ngFor="let score of friendToTrack.userScoring.frontNineScores">
                     {{ score === 0 ? '': score }}
                 </td>                
@@ -128,7 +128,7 @@
             </tr> 
             
             <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details">
-                <td>{{friendToTrack.username}}</td>
+                <td>{{friendToTrack.displayname}}</td>
                 <td *ngFor="let score of friendToTrack.userScoring.backNineScores">
                     {{ score === 0 ? '': score }}
                 </td>                

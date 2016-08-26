@@ -11,7 +11,7 @@
     
 	  <div class="list-group account-list">
   		<div *ngFor="let account of accounts; let i = index" class="list-group-item row" (click)="addFriend(i)" >
-  			<span class="account-name">{{ account.username }} - Handicap: {{ account.handicap }}</span>
+  			<span class="account-name">{{ account.displayname }} - Handicap: {{ account.handicap }}</span>
   		</div>
 	  </div>  
 	  
@@ -29,7 +29,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let friend of friendsWithDetails; let i = index">
-              <td>{{ friend.username }}</td>
+              <td>{{ friend.displayname }}</td>
               <td class="text-center"><span class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span></td>
               <td (click)="removeFriend(i)" class="text-center"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></td>              
             </tr>

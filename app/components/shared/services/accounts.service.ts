@@ -22,6 +22,12 @@ export class AccountsService {
     return this.http.get('/api/accounts/' + id)
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
+  } 
+  
+  getCurrentAccount(): Observable<string[]> {
+    return this.http.get('/api/user/current-user')
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
   }   
  
   getAllAccounts(): Observable<Object[]> {

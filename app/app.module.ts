@@ -20,6 +20,8 @@ import { CourseManagementComponent } from './components/manage/courses/courses.c
 import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
 import { EditCourseComponent } from './components/manage/courses/edit/edit-course.component';
 
+import { AccountManagementComponent } from './components/manage/account/account.component';
+
 import { AuthService } from "./components/shared/services/auth.service";
 import { CourseService } from "./components/shared/services/course.service";
 import { FriendsService } from "./components/shared/services/friends.service";
@@ -45,6 +47,7 @@ import { AccountsService } from "./components/shared/services/accounts.service";
         LoginComponent,
         HomeComponent,
         DashboardComponent,
+        AccountManagementComponent,
         FriendsComponent,
         SingleRoundComponent,
         //FoursomeComponent,

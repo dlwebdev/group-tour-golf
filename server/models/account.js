@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 var accountSchema = new Schema({
   id: String,
   username: String,
+  displayname: String,
   handicap: Number,
   friends: Array,
   rounds: Array,

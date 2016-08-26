@@ -14,6 +14,8 @@ import { CourseManagementComponent } from './components/manage/courses/courses.c
 import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
 import { EditCourseComponent } from './components/manage/courses/edit/edit-course.component';
 
+import { AccountManagementComponent } from './components/manage/account/account.component';
+
 export const routes: Routes = [
     { path: '', component: HomeComponent, terminal: true },
     { path: 'quickstart', component: QuickstartComponent },
@@ -22,6 +24,9 @@ export const routes: Routes = [
     { path: 'about', component: AboutComponent },
     { path: 'login', component: LoginComponent },
     { path: 'dashboard', component: DashboardComponent },
+    // Manage account
+    { path: 'manage/account', component: AccountManagementComponent },
+    // Manage friends
     { path: 'manage/friends', component: FriendsComponent },
     // Manage courses
     { path: 'manage/courses', component: CourseManagementComponent },
