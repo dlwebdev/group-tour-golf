@@ -56,7 +56,7 @@ router.get('/:userId/removeFriend/:friendId', function(req, res, next) {
         if(err) console.log('Err: ', err);
         
         var existingAccount = result;
-        console.log("Existing account for removing friend: ", existingAccount);
+        //console.log("Existing account for removing friend: ", existingAccount);
         
         for(var i = 0; i < existingAccount.friends; i++) {
             if(existingAccount.friends[i] == friendId) {
@@ -64,7 +64,7 @@ router.get('/:userId/removeFriend/:friendId', function(req, res, next) {
             }
         }
         
-        console.log("Existing account after removing friend: ", existingAccount);
+        //console.log("Existing account after removing friend: ", existingAccount);
         
         Account.update({id: userId}, existingAccount, {upsert: true}, function (err, updatedAccount) {
             if(err) console.log('Err: ', err);
@@ -100,6 +100,17 @@ router.put('/:id', function(req, res) {
     }    
 });
 
+// Returns all the rounds for friends passed in via array of ids
+router.put('/not-friends/:id', function(req, res) {
+    var friends = req.body;
+       
+    Account.find({ id: { $nin: friends } }, function (err, accounts) {
+        if(err) console.log('Err: ', err);
+        res.json(accounts);
+    });       
+       
+});
+
 router.get('/:id/get-current-round-scores', function(req, res) {
     // returns the current round scores for this friend so you can update live scoring
     var id = req.params.id;
@@ -111,7 +122,7 @@ router.get('/:id/get-current-round-scores', function(req, res) {
 
 router.put('/:id/update-current-round', function(req, res) {
     var id = req.params.id;
-    console.log('Will save the current round data for user with id of: ', id);
+    //console.log('Will save the current round data for user with id of: ', id);
 
     var roundData = req.body;
 
@@ -120,11 +131,11 @@ router.put('/:id/update-current-round', function(req, res) {
     if (id) {
         Account.findOne({'id':id},function(err, account) {
             if(err) console.log('Err: ', err);
-            console.log("Located account to update round for: ", account);
+            //console.log("Located account to update round for: ", account);
             
             var existingAccount = account;
             
-            console.log("Existing account before saving current round data: ", existingAccount);
+            //console.log("Existing account before saving current round data: ", existingAccount);
             
             existingAccount.currentRound = roundData;
             
@@ -144,7 +155,6 @@ router.put('/:id/finalize-current-round', function(req, res) {
     var currentDate = moment().format('MM-DD-YYYY');
     
     // create entry in rounds table.
-
     var round = new Round({
       userId: req.body.userId,
       userName: req.body.userName,
@@ -152,6 +162,9 @@ router.put('/:id/finalize-current-round', function(req, res) {
       courseName: req.body.courseName,
       courseId: req.body.courseId,
       scoreToPar: req.body.scoreToPar,
+      frontNineScores: req.body.userScoring.frontNineScores,
+      backNineScores: req.body.userScoring.backNineScores,
+      holes: req.body.userScoring.holes,
       date: currentDate
     });
 
@@ -176,8 +189,7 @@ router.put('/:id/finalize-current-round', function(req, res) {
                 scoreToPar: roundData.scoreToPar,
                 date: currentDate
             });
-            existingAccount.currentRound = {};
-            delete existingAccount.currentRound;
+            existingAccount.currentRound.roundCompleted = 1;
             
             Account.update({id: id}, existingAccount, {upsert: true}, function (err, updatedAccount) {
                 if(err) console.log('Err: ', err);

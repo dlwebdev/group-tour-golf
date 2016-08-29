@@ -1,0 +1,62 @@
+:host {
+  display: block;
+  margin-top: 75px;
+}
+
+input {
+  width: 250px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0 0 0 8px;
+}
+
+.account-list .list-group-item {
+  cursor: pointer;
+}
+
+.current-friends td .glyphicon {
+  font-size: 20px;
+  cursor: pointer;  
+}
+
+.glyphicon-remove-circle {
+  color:red;
+}
+
+.hole-par {
+  border-top: 1px solid #e3e3e3;
+}
+
+.tee-details td {
+  text-align: center;
+  background: #f1f1f1;
+}
+
+.user-score-details td {
+  text-align: center;
+}
+
+tr.header {
+  background: #e3e3e3;
+}
+
+.fake-scorecard .header td {
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .modal-header:after, .modal-header:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
+    display: table;
+    content: none;
+}
+
+.user-score-details .under-par {
+  background: #e62117;
+}
+
+.user-score-details .over-par {
+  background: #1b95e0;
+}

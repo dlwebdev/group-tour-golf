@@ -1,0 +1,79 @@
+<div class="container">
+    <h2 class="text-center">Round Detail</h2>
+
+    <!--Course: <pre>{{ course | json }}</pre>-->
+    
+    <div class="course-details text-center">
+      <h2 class="user">{{ round.userName }} - {{ round.date }}</h2>
+      <div class="course-location">{{ course.name }}</div>
+      <div class="course-location">{{ course.location }}</div>
+    </div>
+    
+    <br><br>
+    
+    <table *ngIf="course" class="fake-scorecard table table-bordered">
+      <tr class="header">
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>Out</td>
+        <td>&nbsp;</td>
+      </tr>
+			<tr class="row course-info tee-details">
+          <td *ngFor="let hole of frontNine">
+              <div class="hole-yardage">
+                {{hole.distance}}
+              </div>
+
+              <div class="hole-par">
+                {{hole.par}}
+              </div>
+          </td>
+          <td>&nbsp;</td>
+			</tr> 
+      <tr class="row user-score-details">
+          <td *ngFor="let score of round.frontNineScores; let i = index;" [ngClass]="getScoreToParClass(i, 'front')">
+              {{ score }}
+          </td> 
+          <td>&nbsp;</td>
+      </tr>	
+            
+      <tr><td colspan="11">&nbsp;</td></tr>
+            
+      <tr class="header">
+        <td>10</td>
+        <td>11</td>
+        <td>12</td>
+        <td>13</td>
+        <td>14</td>
+        <td>15</td>
+        <td>16</td>
+        <td>17</td>
+        <td>18</td>
+        <td>In</td>
+        <td>Total</td>                
+      </tr>
+			<tr class="row course-info tee-details">
+          <td *ngFor="let hole of backNine">
+            <div class="hole-yardage">
+              {{hole.distance}}
+            </div>
+            <div class="hole-par">
+              {{hole.par}}
+            </div>
+          </td>
+			</tr>             
+      <tr class="row user-score-details">
+        <td *ngFor="let score of round.backNineScores; let i = index;" [ngClass]="getScoreToParClass(i, 'back')">
+          {{ score }}
+        </td>                
+      </tr> 
+            
+    </table>     
+</div>

@@ -117,3 +117,7 @@ body {
   display: inline-block;
   cursor:pointer;
 }
+
+.recent-rounds .glyphicon {
+  cursor: pointer;
+}

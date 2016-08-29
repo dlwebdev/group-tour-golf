@@ -4,6 +4,7 @@ import { Router, ROUTER_DIRECTIVES } from '@angular/router';
 
 import { AuthService } from "../../shared/services/auth.service";
 import { AccountsService } from "../../shared/services/accounts.service";
+import { CourseService } from "../../shared/services/course.service";
 
 import { ChooseCourseDirective } from "../../shared/directives/choose-course/choose-course.directive";
 
@@ -31,7 +32,7 @@ export class SingleRoundComponent {
   frontNine: object;
   backNine: object;
     
-  constructor(private router: Router, private accountsService: AccountsService, private authService: AuthService) {
+  constructor(private router: Router, private accountsService: AccountsService, private authService: AuthService, private courseService: CourseService) {
       this.userScoring = {
           totalScore: 0,
           frontNineTotal: 0,
@@ -56,7 +57,7 @@ export class SingleRoundComponent {
       this.authService.getCurrentUser()
             .subscribe(
                 user => {
-                    console.log('Current User response: ', user);
+                    //console.log('Current User response: ', user);
                     this.user = user;
                     
                     if(!this.user.id) {
@@ -67,6 +68,28 @@ export class SingleRoundComponent {
             );      
   }  
     
+  continueRound() {
+    this.userScoring = this.user.currentRound.userScoring;
+    this.currentHoleIndex = this.user.currentRound.currentHoleIndex;
+    this.loadCourse(this.user.currentRound.chosenCourse);
+  }  
+  
+  // When continuing a round, just load the course they were playing
+  loadCourse(id:string) {
+    this.courseService.getCourse(id)
+      .subscribe(
+        resp => {
+          this.chosenCourse = resp;
+          
+          this.frontNine = this.chosenCourse.holes.slice(0, 10);
+          this.backNine = this.chosenCourse.holes.slice(10);
+          this.courseHasBeenChosen = true;
+          this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];          
+        },
+        error => this.errorMessage = <any>error
+      );
+  }    
+    
   courseChosen(course) {
     // Handle the event
     this.chosenCourse = course;
@@ -75,8 +98,6 @@ export class SingleRoundComponent {
     this.backNine = this.chosenCourse.holes.slice(10);
     
     this.courseHasBeenChosen = true;
-    
-    console.log("Hide the course chooser and BEGIN ROUND HERE.");
     
     this.currentHoleIndex = 0;
     this.currentHole = this.chosenCourse.holes[this.currentHoleIndex];
@@ -124,6 +145,7 @@ export class SingleRoundComponent {
     let currentRoundData = {
       chosenCourse: this.chosenCourse._id,
       currentHoleIndex: this.currentHoleIndex,
+      roundCompleted: 0,
       userScoring: this.userScoring
     };
     
@@ -141,13 +163,13 @@ export class SingleRoundComponent {
   updateFriendsScores() {
     for(let i = 0; i < this.friendsToTrack.length; i++) {
       let frnd = this.friendsToTrack[i];
-      console.log("Update scores for friend: ", frnd);
+      //console.log("Update scores for friend: ", frnd);
       
       this.accountsService.getFriendsRoundScores(frnd.id)
         .subscribe(
           acct => {
             // just returns this users current account which contains currentRound IF they are playing and saving scores
-            console.log("Friends current account: ", acct);
+            //console.log("Friends current account: ", acct);
             this.friendsToTrack[i].userScoring = acct.currentRound.userScoring;
           },
           error =>  this.errorMessage = <any>error
@@ -223,12 +245,6 @@ export class SingleRoundComponent {
   }
   
   finalizeRound() {
-    // When save round button is clicked it will add an entry into account rounds and clear the currentRound object field.
-    //console.log("When save round button is clicked it will add an entry into account rounds and clear the currentRound object field.");
-      
-    this.userScoring.frontNineScores = [];
-    this.userScoring.backNineScores = [];
-    this.userScoring.holes = [];
     this.userScoring.roundComplete = true;
       
     let currentRoundData = {
@@ -239,6 +255,7 @@ export class SingleRoundComponent {
       courseName: this.chosenCourse.name,
       chosenCourse: this.chosenCourse._id,
       currentHoleIndex: this.currentHoleIndex,
+      roundCompleted: 1,
       scoreToPar: this.userScoring.scoreToPar,
       totalScore: this.userScoring.totalScore,
       userScoring: this.userScoring
@@ -247,7 +264,6 @@ export class SingleRoundComponent {
     this.accountsService.finalizeRound(this.user.id, currentRoundData)
       .subscribe(
         round => {
-          //console.log("Round was successfully finalized: ", round);
           this.router.navigate(['/dashboard']);
         },
         error =>  this.errorMessage = <any>error
@@ -295,6 +311,66 @@ export class SingleRoundComponent {
   
   add(a:number, b:number) {
       return a + b;
+  }  
+  
+  getUserScoreToParClass(index:number, frontOrBack:string) {
+      let classes = "";
+      
+      if(this.chosenCourse.holes) {
+        let scoreToTest = 0;
+        let holeNumber = index;
+        
+        if(frontOrBack === 'back') {
+          scoreToTest = this.userScoring.backNineScores[index];
+          holeNumber += 10;
+        }
+        else {
+          scoreToTest = this.userScoring.frontNineScores[index];
+        }
+        
+        if((holeNumber < 19) && (holeNumber !== 9) && (scoreToTest > 0)) {
+          let holeDetails = this.chosenCourse.holes[holeNumber];
+
+          if(scoreToTest > holeDetails.par) {
+            classes += " over-par";
+          }
+          else if(scoreToTest < holeDetails.par) {
+            classes += " under-par";
+          }
+        }
+      }
+      
+      return classes;
+  }  
+  
+  getFriendsScoreToParClass(index:number, frontOrBack:string, friendToTrack:object) {
+      let classes = "";
+      
+      if(this.chosenCourse.holes) {
+        let scoreToTest = 0;
+        let holeNumber = index;
+        
+        if(frontOrBack === 'back') {
+          scoreToTest = friendToTrack.userScoring.backNineScores[index];
+          holeNumber += 10;
+        }
+        else {
+          scoreToTest = friendToTrack.userScoring.frontNineScores[index];
+        }
+        
+        if((holeNumber < 19) && (holeNumber !== 9) && (scoreToTest > 0)) {
+          let holeDetails = this.chosenCourse.holes[holeNumber];
+
+          if(scoreToTest > holeDetails.par) {
+            classes += " over-par";
+          }
+          else if(scoreToTest < holeDetails.par) {
+            classes += " under-par";
+          }
+        }
+      }
+      
+      return classes;
   }  
   
 }

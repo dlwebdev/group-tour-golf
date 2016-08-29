@@ -61,8 +61,6 @@ export class AccountsService {
   
   finalizeRound(id:string, roundData:Object): Observable<string[]> {
     let headers = new Headers({'Content-Type': 'application/json'});
-    
-    console.log("Finalizing round data: ", roundData);
 
     return this.http.put('/api/accounts/' + id + '/finalize-current-round', JSON.stringify(roundData), {
       headers: headers
@@ -75,6 +73,14 @@ export class AccountsService {
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
   }
+  
+  getAccountsNotFriends(id:string, friendsArray: array): Observable<Object[]> {
+    let headers = new Headers({'Content-Type': 'application/json'});
+
+    return this.http.put('/api/accounts/not-friends/' + id, friendsArray, {
+      headers: headers
+    }).map((res) => res.json());
+  }   
   
   getUserFriends(): Observable<string[]> {
     return this.http.get('/api/user/friends')

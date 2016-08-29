@@ -16,7 +16,7 @@ export class DashboardComponent {
     user: object = {};
     recentRounds: array = [];
     
-    constructor(private accountsService: AccountsService, private authService: AuthService, private roundsService: RoundsService) { }    
+    constructor(private router: Router, private accountsService: AccountsService, private authService: AuthService, private roundsService: RoundsService) { }    
     
     ngOnInit() {
       this.checkIfLoggedIn();
@@ -51,5 +51,9 @@ export class DashboardComponent {
           },
           error =>  this.errorMessage = <any>error
         );      
-    }    
+    } 
+    
+    viewPreviousRound(id:string) {
+      this.router.navigate(['/rounds/round-detail', id]);
+    }
 }

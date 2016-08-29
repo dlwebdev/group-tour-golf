@@ -1,7 +1,11 @@
 <div class="container-fluid">
     <!--<h1 class="text-center">Regular Mode</h1>-->
     
-    <!--Chosen Course: <pre>{{chosenCourse | json}}</pre>-->
+    <!--
+    <div *ngIf="user">
+        User: <pre>{{ user.currentRound | json }}</pre>
+    </div>
+    -->
     
     <!--
     <p>This is the type of view used during a personal round or by each person during a tournament.</p>
@@ -9,13 +13,14 @@
     -->
     
     <div *ngIf="!courseHasBeenChosen" class="choose-course-container">
+        <button *ngIf="!user?.currentRound?.roundCompleted" type="button" class="btn btn-primary btn-lg btn-block" (click)="continueRound()">Continue Round</button>
         <course-chooser (courseChosen)='courseChosen($event)'></course-chooser>
     </div>
     
     <!--friendsToTrack: {{ friendsToTrack | json }}-->
     
     <div *ngIf="courseHasBeenChosen">
-        <h2 class="course-name text-center">{{chosenCourse.name}}</h2>
+        <div class="course-name text-center">{{chosenCourse.name}}</div>
         
         <div class="bordered">
             <button type="button" class="btn btn-primary btn-lg btn-block" (click)="showFriendPicker()">Track Friends Score</button>
@@ -66,16 +71,16 @@
                     </div>
                 </td>
 			</tr> 
-            <tr class="row tee-details">
+            <tr class="row tee-details user-score-details">
                 <td>You</td>
-                <td *ngFor="let score of userScoring.frontNineScores">
+                <td *ngFor="let score of userScoring.frontNineScores; let i = index;" [ngClass]="getUserScoreToParClass(i, 'front')">
                     {{ score === 0 ? '': score }}
                 </td>                
             </tr>	
             
-            <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details">
+            <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details user-score-details">
                 <td>{{friendToTrack.displayname}}</td>
-                <td *ngFor="let score of friendToTrack.userScoring.frontNineScores">
+                <td *ngFor="let score of friendToTrack.userScoring.frontNineScores; let i = index;" [ngClass]="getFriendsScoreToParClass(i, 'front', friendToTrack)">
                     {{ score === 0 ? '': score }}
                 </td>                
             </tr>                
@@ -120,16 +125,16 @@
                     </div>
                 </td>
 			</tr>             
-            <tr class="row tee-details">
+            <tr class="row tee-details user-score-details">
                 <td>You</td>
-                <td *ngFor="let score of userScoring.backNineScores">
+                <td *ngFor="let score of userScoring.backNineScores; let i = index;" [ngClass]="getUserScoreToParClass(i, 'back')">
                     {{ score === 0 ? '': score }}
                 </td>                
-            </tr> 
+            </tr>
             
-            <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details">
+            <tr *ngFor="let friendToTrack of friendsToTrack;" class="row tee-details user-score-details">
                 <td>{{friendToTrack.displayname}}</td>
-                <td *ngFor="let score of friendToTrack.userScoring.backNineScores">
+                <td *ngFor="let score of friendToTrack.userScoring.backNineScores; let i = index;" [ngClass]="getFriendsScoreToParClass(i, 'back', friendToTrack)">
                     {{ score === 0 ? '': score }}
                 </td>                
             </tr>             

@@ -99,3 +99,11 @@ tr.header {
 .friends-container .list-group-item {
   cursor: pointer;
 }
+
+.user-score-details .under-par {
+  background: #e62117;
+}
+
+.user-score-details .over-par {
+  background: #1b95e0;
+}

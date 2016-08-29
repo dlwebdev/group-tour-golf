@@ -16,6 +16,9 @@ import { QuickstartComponent } from './components/quickstart/quickstart.componen
 import { SingleRoundComponent } from './components/roundtypes/single/single.component';
 //import { FoursomeComponent } from './components/roundtypes/uptofoursome/uptofoursome.component';
 
+import { RoundsComponent } from './components/rounds/rounds.component';
+import { RoundDetailComponent } from './components/rounds/round-detail/round-detail.component';
+
 import { CourseManagementComponent } from './components/manage/courses/courses.component';
 import { AddCourseComponent } from './components/manage/courses/add/add-course.component';
 import { EditCourseComponent } from './components/manage/courses/edit/edit-course.component';
@@ -52,6 +55,8 @@ import { RoundsService } from "./components/shared/services/rounds.service";
         AccountManagementComponent,
         FriendsComponent,
         SingleRoundComponent,
+        RoundsComponent,
+        RoundDetailComponent,
         //FoursomeComponent,
         QuickstartComponent,
         //Course Management Components

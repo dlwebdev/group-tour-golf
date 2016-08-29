@@ -21,7 +21,13 @@ export class FriendsComponent {
     errorMessage: string = '';
     friendsRecentRounds: array = [];
 
-    constructor(private accountsService: AccountsService, private friendsService:FriendsService, private authService: AuthService, private roundsService: RoundsService) { }    
+    constructor(
+      private roundsService: RoundsService, 
+      private accountsService: AccountsService, 
+      private friendsService:FriendsService, 
+      private authService: AuthService, 
+      private router: Router
+    ) { }    
     
     ngOnInit() {
       this.friends = [];
@@ -38,7 +44,7 @@ export class FriendsComponent {
                     this.user = user;
                     
                     if(this.user.id) {
-                      this.getAccounts();
+                      this.getAccountsNotFriends();
                       this.getFriends();  
                     }
                     else {
@@ -65,8 +71,8 @@ export class FriendsComponent {
         );      
     }
     
-    getAccounts() {
-      this.accountsService.getAccountsExcludingUser(this.user.id)
+    getAccountsNotFriends() {
+      this.accountsService.getAccountsNotFriends(this.user.id, this.user.friends)
         .subscribe(
           accounts => this.accounts = accounts,
           error =>  this.errorMessage = <any>error
@@ -121,4 +127,8 @@ export class FriendsComponent {
           error =>  this.errorMessage = <any>error
         );        
     }
+    
+    viewPreviousRound(id:string) {
+      this.router.navigate(['/rounds/round-detail', id]);
+    }    
 }

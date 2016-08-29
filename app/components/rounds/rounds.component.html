@@ -1,0 +1,28 @@
+<div class="container">
+    <h2 class="text-center">Rounds</h2>
+    
+          <!--Rounds: {{ rounds | json }}-->
+
+          <div class="table-responsive">
+            <table class="table table-striped rounds">
+              <thead>
+                <tr>
+                  <th>Score</th>
+                  <th>User</th>
+                  <th>Course</th>
+                  <th>Date</th>
+                  <th>View</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let round of rounds; let i = index;">
+                  <td>{{ round.score }}</td>
+                  <td>{{ round.userName }}</td>
+                  <td>{{ round.courseName }}</td>
+                  <td>{{ round.date }}</td>
+                  <td (click)="viewPreviousRound(round._id)"><span class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>    
+</div>

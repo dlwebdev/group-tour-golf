@@ -52,21 +52,24 @@
 
           </div>
 
+
           <h2 class="sub-header">Your Recent Rounds</h2>
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped recent-rounds">
               <thead>
                 <tr>
                   <th>Score</th>
                   <th>Course</th>
                   <th>Date</th>
+                  <th>View</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let round of recentRounds; let i = index;">
                   <td>{{ round.score }}</td>
                   <td>{{ round.courseName }}</td>
-                  <td>{{ round.date }}</td>                  
+                  <td>{{ round.date }}</td>
+                  <td (click)="viewPreviousRound(round._id)"><span class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span></td>
                 </tr>
               </tbody>
             </table>

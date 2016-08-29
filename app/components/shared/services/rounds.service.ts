@@ -26,11 +26,17 @@ export class RoundsService {
     }).map((res) => res.json());
   } 
   
-  getRecentRoundsForCurrentUser2(): Observable<String[]> {
-    return this.http.get('/api/rounds/rounds-for-current-user')
+  getRounds(): Observable<Object[]> {
+    return this.http.get('/api/rounds/')
                     .map((res: Response) => res.json())
                     .catch(this.handleError);
-  }   
+  }  
+  
+  getRoundInfo(roundId:string): Observable<Object[]> {
+    return this.http.get('/api/rounds/' + roundId)
+                    .map((res: Response) => res.json())
+                    .catch(this.handleError);
+  }
   
   getRecentRoundsForCurrentUser(id:string): Observable<Object[]> {
     return this.http.get('/api/rounds/rounds-for-user/' + id)

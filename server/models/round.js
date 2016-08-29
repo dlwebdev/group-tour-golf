@@ -10,6 +10,9 @@ var roundSchema = new Schema({
   courseName: String,
   courseId: String,
   scoreToPar: String,
+  frontNineScores: Array,
+  backNineScores: Array,
+  holes: Array,  
   date: String
 });
 
