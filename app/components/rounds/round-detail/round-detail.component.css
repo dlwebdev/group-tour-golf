@@ -34,7 +34,7 @@ ul {
   background: #f1f1f1;
 }
 
-.user-score-details td {
+.user-score-details td, .user-score-details td div {
   text-align: center;
 }
 
@@ -47,16 +47,88 @@ tr.header {
     text-align: center;
 }
 
+.container-fluid {
+    padding-right: 0;
+    padding-left: 0;
+}
 
 .btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .modal-header:after, .modal-header:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
     display: table;
     content: none;
 }
 
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 0;
+    line-height: 1.42857143;
+    vertical-align: middle;
+    border-top: 1px solid #ddd;
+}
+
 .user-score-details .under-par {
-  background: #e62117;
+  /*background: #e62117;*/
 }
 
 .user-score-details .over-par {
   background: #1b95e0;
+}
+
+.user-score-details span {
+  font: 23px Arial, sans-serif;
+  display: inline-block;
+  text-align: center;
+  color: #666;
+  background: #fff;
+  width: 30px;
+  height: 30px;
+  padding: 0;  
+}
+
+.user-score-details .eagle {
+    border-radius: 50%;
+    border: 3px double #e62117;
+    font-weight: bold;
+}
+
+.user-score-details .birdie {
+    border-radius: 50%;
+    border: 2px solid #e62117;
+}
+
+.user-score-details .par {
+    padding-top: 2px;
+}
+
+.user-score-details .bogey {
+    border-radius: 2px;
+    border: 2px solid #1b95e0;
+    padding-top: 0;
+}
+
+.user-score-details .double-bogey {
+    border-radius: 2px;
+    border: 3px double #1b95e0;
+    padding-top: 0;
+}
+
+.user-score-details .triple-bogey {
+    border-radius: 2px;
+    background: #80aaff;
+    border: 3px double #003399;
+    padding-top: 0;
+}
+
+@media (min-width: 768px) {
+  .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 8px;
+  }  
+  .user-score-details span {
+    font: 25px Arial, sans-serif;
+    display: inline-block;
+    text-align: center;
+    color: #666;
+    background: #fff;
+    width: 36px;
+    height: 36px;
+    padding: 2px;  
+  } 
 }

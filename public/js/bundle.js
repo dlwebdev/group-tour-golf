@@ -17303,7 +17303,6 @@ $__System.registerDynamic("e", ["3", "19", "7", "1a", "1c", "20", "1f"], true, f
       var _this = this;
       var _loop_1 = function(i) {
         var frnd = this_1.friendsToTrack[i];
-        console.log("Update scores for friend: ", frnd);
         this_1.accountsService.getFriendsRoundScores(frnd.id).subscribe(function(acct) {
           _this.friendsToTrack[i].userScoring = acct.currentRound.userScoring;
         }, function(error) {
@@ -20989,9 +20988,20 @@ $__System.registerDynamic("13", ["3", "19", "7", "1d", "20"], true, function($__
         if ((holeNumber < 19) && (holeNumber !== 9)) {
           var holeDetails = this.course.holes[holeNumber];
           if (scoreToTest > holeDetails.par) {
-            classes += " over-par";
+            var amountOver = scoreToTest - holeDetails.par;
+            console.log("Hole Details: ", holeDetails);
+            console.log("Amount over: ", amountOver);
+            if (amountOver === 1) {
+              classes += " bogey";
+            } else if (amountOver === 2) {
+              classes += " double-bogey";
+            } else {
+              classes += " triple-bogey";
+            }
           } else if (scoreToTest < holeDetails.par) {
-            classes += " under-par";
+            classes += " birdie";
+          } else {
+            classes += " par";
           }
         }
       }

@@ -47,10 +47,26 @@ export class RoundDetailComponent implements OnInit {
           let holeDetails = this.course.holes[holeNumber];
 
           if(scoreToTest > holeDetails.par) {
-            classes += " over-par";
+            let amountOver = scoreToTest - holeDetails.par;
+            
+            console.log("Hole Details: ", holeDetails);
+            console.log("Amount over: ", amountOver);
+            
+            if(amountOver === 1) {
+              classes += " bogey";
+            }
+            else if(amountOver === 2) {
+              classes += " double-bogey";
+            }
+            else {
+              classes += " triple-bogey";
+            }
           }
           else if(scoreToTest < holeDetails.par) {
-            classes += " under-par";
+            classes += " birdie";
+          }
+          else {
+            classes += " par";
           }
         }
       }
