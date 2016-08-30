@@ -332,10 +332,30 @@ export class SingleRoundComponent {
           let holeDetails = this.chosenCourse.holes[holeNumber];
 
           if(scoreToTest > holeDetails.par) {
-            classes += " over-par";
+            let amountOver = scoreToTest - holeDetails.par;
+            
+            if(amountOver === 1) {
+              classes += " bogey";
+            }
+            else if(amountOver === 2) {
+              classes += " double-bogey";
+            }
+            else {
+              classes += " triple-bogey";
+            }
           }
           else if(scoreToTest < holeDetails.par) {
-            classes += " under-par";
+            let amountUnder = holeDetails.par - scoreToTest;
+            
+            if(amountUnder === 1) {
+              classes += " birdie";
+            }            
+            else {
+              classes += " eagle";
+            }
+          }
+          else {
+            classes += " par";
           }
         }
       }
@@ -362,10 +382,30 @@ export class SingleRoundComponent {
           let holeDetails = this.chosenCourse.holes[holeNumber];
 
           if(scoreToTest > holeDetails.par) {
-            classes += " over-par";
+            let amountOver = scoreToTest - holeDetails.par;
+            
+            if(amountOver === 1) {
+              classes += " bogey";
+            }
+            else if(amountOver === 2) {
+              classes += " double-bogey";
+            }
+            else {
+              classes += " triple-bogey";
+            }
           }
           else if(scoreToTest < holeDetails.par) {
-            classes += " under-par";
+            let amountUnder = holeDetails.par - scoreToTest;
+            
+            if(amountUnder === 1) {
+              classes += " birdie";
+            }            
+            else {
+              classes += " eagle";
+            }
+          }
+          else {
+            classes += " par";
           }
         }
       }

@@ -73,15 +73,15 @@
 			</tr> 
             <tr class="row tee-details user-score-details">
                 <td>You</td>
-                <td *ngFor="let score of userScoring.frontNineScores; let i = index;" [ngClass]="getUserScoreToParClass(i, 'front')">
-                    {{ score === 0 ? '': score }}
+                <td *ngFor="let score of userScoring.frontNineScores; let i = index;">
+                    <span [ngClass]="getUserScoreToParClass(i, 'front')">{{ score === 0 ? '': score }}</span>
                 </td>                
             </tr>	
             
             <tr *ngFor="let friendToTrack of friendsToTrack" class="row tee-details user-score-details">
                 <td>{{friendToTrack.displayname}}</td>
-                <td *ngFor="let score of friendToTrack.userScoring.frontNineScores; let i = index;" [ngClass]="getFriendsScoreToParClass(i, 'front', friendToTrack)">
-                    {{ score === 0 ? '': score }}
+                <td *ngFor="let score of friendToTrack.userScoring.frontNineScores; let i = index;">
+                    <span [ngClass]="getFriendsScoreToParClass(i, 'front', friendToTrack)">{{ score === 0 ? '': score }}</span>
                 </td>                
             </tr>                
             
@@ -127,15 +127,15 @@
 			</tr>             
             <tr class="row tee-details user-score-details">
                 <td>You</td>
-                <td *ngFor="let score of userScoring.backNineScores; let i = index;" [ngClass]="getUserScoreToParClass(i, 'back')">
-                    {{ score === 0 ? '': score }}
+                <td *ngFor="let score of userScoring.backNineScores; let i = index;">
+                    <span [ngClass]="getUserScoreToParClass(i, 'back')">{{ score === 0 ? '': score }}</span>
                 </td>                
             </tr>
             
             <tr *ngFor="let friendToTrack of friendsToTrack;" class="row tee-details user-score-details">
                 <td>{{friendToTrack.displayname}}</td>
-                <td *ngFor="let score of friendToTrack.userScoring.backNineScores; let i = index;" [ngClass]="getFriendsScoreToParClass(i, 'back', friendToTrack)">
-                    {{ score === 0 ? '': score }}
+                <td *ngFor="let score of friendToTrack.userScoring.backNineScores; let i = index;">
+                    <span [ngClass]="getFriendsScoreToParClass(i, 'back', friendToTrack)">{{ score === 0 ? '': score }}</span>
                 </td>                
             </tr>             
             

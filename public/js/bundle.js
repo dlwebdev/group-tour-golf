@@ -17419,9 +17419,23 @@ $__System.registerDynamic("e", ["3", "19", "7", "1a", "1c", "20", "1f"], true, f
         if ((holeNumber < 19) && (holeNumber !== 9) && (scoreToTest > 0)) {
           var holeDetails = this.chosenCourse.holes[holeNumber];
           if (scoreToTest > holeDetails.par) {
-            classes += " over-par";
+            var amountOver = scoreToTest - holeDetails.par;
+            if (amountOver === 1) {
+              classes += " bogey";
+            } else if (amountOver === 2) {
+              classes += " double-bogey";
+            } else {
+              classes += " triple-bogey";
+            }
           } else if (scoreToTest < holeDetails.par) {
-            classes += " under-par";
+            var amountUnder = holeDetails.par - scoreToTest;
+            if (amountUnder === 1) {
+              classes += " birdie";
+            } else {
+              classes += " eagle";
+            }
+          } else {
+            classes += " par";
           }
         }
       }
@@ -17441,9 +17455,23 @@ $__System.registerDynamic("e", ["3", "19", "7", "1a", "1c", "20", "1f"], true, f
         if ((holeNumber < 19) && (holeNumber !== 9) && (scoreToTest > 0)) {
           var holeDetails = this.chosenCourse.holes[holeNumber];
           if (scoreToTest > holeDetails.par) {
-            classes += " over-par";
+            var amountOver = scoreToTest - holeDetails.par;
+            if (amountOver === 1) {
+              classes += " bogey";
+            } else if (amountOver === 2) {
+              classes += " double-bogey";
+            } else {
+              classes += " triple-bogey";
+            }
           } else if (scoreToTest < holeDetails.par) {
-            classes += " under-par";
+            var amountUnder = holeDetails.par - scoreToTest;
+            if (amountUnder === 1) {
+              classes += " birdie";
+            } else {
+              classes += " eagle";
+            }
+          } else {
+            classes += " par";
           }
         }
       }
@@ -20989,8 +21017,6 @@ $__System.registerDynamic("13", ["3", "19", "7", "1d", "20"], true, function($__
           var holeDetails = this.course.holes[holeNumber];
           if (scoreToTest > holeDetails.par) {
             var amountOver = scoreToTest - holeDetails.par;
-            console.log("Hole Details: ", holeDetails);
-            console.log("Amount over: ", amountOver);
             if (amountOver === 1) {
               classes += " bogey";
             } else if (amountOver === 2) {
@@ -20999,7 +21025,12 @@ $__System.registerDynamic("13", ["3", "19", "7", "1d", "20"], true, function($__
               classes += " triple-bogey";
             }
           } else if (scoreToTest < holeDetails.par) {
-            classes += " birdie";
+            var amountUnder = holeDetails.par - scoreToTest;
+            if (amountUnder === 1) {
+              classes += " birdie";
+            } else {
+              classes += " eagle";
+            }
           } else {
             classes += " par";
           }

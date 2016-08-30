@@ -49,9 +49,6 @@ export class RoundDetailComponent implements OnInit {
           if(scoreToTest > holeDetails.par) {
             let amountOver = scoreToTest - holeDetails.par;
             
-            console.log("Hole Details: ", holeDetails);
-            console.log("Amount over: ", amountOver);
-            
             if(amountOver === 1) {
               classes += " bogey";
             }
@@ -63,7 +60,14 @@ export class RoundDetailComponent implements OnInit {
             }
           }
           else if(scoreToTest < holeDetails.par) {
-            classes += " birdie";
+            let amountUnder = holeDetails.par - scoreToTest;
+            
+            if(amountUnder === 1) {
+              classes += " birdie";
+            }            
+            else {
+              classes += " eagle";
+            }
           }
           else {
             classes += " par";

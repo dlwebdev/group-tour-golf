@@ -31,6 +31,13 @@ ul {
   padding: 0;
 }
 
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 0;
+    line-height: 1.42857143;
+    vertical-align: middle;
+    border-top: 1px solid #ddd;
+}
+
 .hole-par {
   border-top: 1px solid #e3e3e3;
 }
@@ -114,8 +121,8 @@ tr.header {
   text-align: center;
   color: #666;
   background: #fff;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   padding: 0;  
 }
 
